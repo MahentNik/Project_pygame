@@ -4,15 +4,17 @@ import pygame
 JUMP_POWER = 10
 HERO_SPEED = 6
 GRAVITY = 0.35
+WATER_RESISTANCE = TO_GRAVITY, TO_SPEED = (0.3, 4.5)  # сопротивление движения в воде
+# потом следует вычислять эти параметры в процентах (пока так)
 
 
 class Hero(pygame.sprite.Sprite):
-    def __init__(self, pos_x, pos_y,  tile_width, tile_height, image,  *groups):
-        super().__init__(groups)
+    def __init__(self, pos_x, pos_y):
+        super().__init__(hero_group, all_sprites)
         self.vx = 0
         self.vy = 0
         self.on_Ground = False
-        self.image = image
+        self.image = load_image('p1_stand.png')
         self.rect = self.image.get_rect().move(tile_width * pos_x,
                                                tile_height * pos_y)
 
@@ -32,26 +34,61 @@ class Hero(pygame.sprite.Sprite):
                     self.rect.top = tile.rect.bottom
                     self.vy = 0
 
-    def update(self, left, right, up, group):
-        if up:
-            if self.on_Ground:
-                self.vy = -JUMP_POWER
-        if left:
-            self.vx = -HERO_SPEED
-        elif right:
-            self.vx = HERO_SPEED
-        if not (left or right):
-            self.vx = 0
-        if not self.on_Ground:
-            self.vy += GRAVITY
+    def update(self, left, right, up, wat_up, wat_down):
+        if not collide(self, water_group) and not collide(self, ladder_group):
+            if up:
+                if self.on_Ground:
+                    self.vy = -JUMP_POWER
+            if left:
+                self.vx = -HERO_SPEED
+            elif right:
+                self.vx = HERO_SPEED
+            if not (left or right):
+                self.vx = 0
+            if not self.on_Ground:
+                self.vy += GRAVITY
 
-        self.on_Ground = False
+            self.on_Ground = False
 
-        self.rect.y += self.vy
-        self.collide(0, self.vy, group)
+            self.rect.y += self.vy
+            self.collide(0, self.vy, let_group)
 
-        self.rect.x += self.vx
-        self.collide(self.vx, 0, group)
+            self.rect.x += self.vx
+            self.collide(self.vx, 0, let_group)
+        elif collide(self, water_group):
+            self.vy += (GRAVITY - TO_GRAVITY)
+            if wat_up:
+                self.vy = -(HERO_SPEED - TO_SPEED)
+            if left:
+                self.vx = -(HERO_SPEED - TO_SPEED)
+            elif right:
+                self.vx = (HERO_SPEED - TO_SPEED)
+            if not (left or right):
+                self.vx = 0
+            self.rect.y += self.vy
+            self.collide(0, self.vy, let_group)
+
+            self.rect.x += self.vx
+            self.collide(self.vx, 0, let_group)
+        elif collide(self, ladder_group):
+            if wat_up:
+                self.vy = -HERO_SPEED
+            if wat_down:
+                self.vy = HERO_SPEED
+            if left:
+                self.vx = -HERO_SPEED
+            elif right:
+                self.vx = HERO_SPEED
+            if not (wat_up or wat_down):
+                self.vy = 0
+            if not (left or right):
+                self.vx = 0
+
+            self.rect.y += self.vy
+            self.collide(0, self.vy, let_group)
+
+            self.rect.x += self.vx
+            self.collide(self.vx, 0, let_group)
 
         """if collide(self, let_group):
             if self.vx < 0:
