@@ -7,9 +7,6 @@ from ground import Ground
 # основные переменные
 WINDOW_SIZE = WIDTH, HEIGHT = 1600, 800
 FPS = 60
-JUMP_POWER = 10
-HERO_SPEED = 6
-GRAVITY = 0.35
 
 tile_width = tile_height = 70
 PLATFORM_COLOR = "#FF6262"
@@ -45,12 +42,7 @@ def load_image(name, color_key=None):
     return image
 
 
-# загрузка картинок
-hero_im = load_image('p1_stand.png')
-brick = load_image("brickWall.png")
-
-
-def create_level(name_level):
+def create_level(name_level, hero_im, brick):
     for y in range(len(name_level)):
         for x in range(len(name_level[y])):
             if name_level[y][x] == ' ':
@@ -68,8 +60,12 @@ def main():
 
     screen = pygame.display.set_mode(WINDOW_SIZE)
 
+    # загрузка картинок
+    hero_im = load_image('p1_stand.png')
+    brick = load_image("brickWall.png")
+
     clock = pygame.time.Clock()
-    hero = create_level(PRIMITIVE_LEVEL)
+    hero = create_level(PRIMITIVE_LEVEL, hero_im, brick)
     is_left = is_right = False
     up = False
 
@@ -92,7 +88,7 @@ def main():
                     is_right = False
                 elif event.key == pygame.K_LEFT:
                     is_left = False
-        hero.update(is_left, is_right, up)
+        hero.update(is_left, is_right, up, let_group)
         screen.fill("Black")
         air_group.draw(screen)
         hero_group.draw(screen)

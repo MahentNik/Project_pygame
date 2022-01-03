@@ -1,6 +1,11 @@
 import pygame
 
 
+JUMP_POWER = 10
+HERO_SPEED = 6
+GRAVITY = 0.35
+
+
 class Hero(pygame.sprite.Sprite):
     def __init__(self, pos_x, pos_y,  tile_width, tile_height, image,  *groups):
         super().__init__(groups)
@@ -27,7 +32,7 @@ class Hero(pygame.sprite.Sprite):
                     self.rect.top = tile.rect.bottom
                     self.vy = 0
 
-    def update(self, left, right, up):
+    def update(self, left, right, up, group):
         if up:
             if self.on_Ground:
                 self.vy = -JUMP_POWER
@@ -43,10 +48,10 @@ class Hero(pygame.sprite.Sprite):
         self.on_Ground = False
 
         self.rect.y += self.vy
-        self.collide(0, self.vy, let_group)
+        self.collide(0, self.vy, group)
 
         self.rect.x += self.vx
-        self.collide(self.vx, 0, let_group)
+        self.collide(self.vx, 0, group)
 
         """if collide(self, let_group):
             if self.vx < 0:
