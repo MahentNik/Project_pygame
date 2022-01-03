@@ -1,6 +1,5 @@
 import pygame
 
-
 JUMP_POWER = 10
 HERO_SPEED = 6
 GRAVITY = 0.35
@@ -9,12 +8,12 @@ WATER_RESISTANCE = TO_GRAVITY, TO_SPEED = (0.3, 4.5)  # сопротивлени
 
 
 class Hero(pygame.sprite.Sprite):
-    def __init__(self, pos_x, pos_y):
-        super().__init__(hero_group, all_sprites)
+    def __init__(self, pos_x, pos_y,  tile_width, tile_height, image,  *groups):
+        super().__init__(groups)
         self.vx = 0
         self.vy = 0
         self.on_Ground = False
-        self.image = load_image('p1_stand.png')
+        self.image = image
         self.rect = self.image.get_rect().move(tile_width * pos_x,
                                                tile_height * pos_y)
 
@@ -34,8 +33,11 @@ class Hero(pygame.sprite.Sprite):
                     self.rect.top = tile.rect.bottom
                     self.vy = 0
 
-    def update(self, left, right, up, wat_up, wat_down):
-        if not collide(self, water_group) and not collide(self, ladder_group):
+    def other_collide(self, player, group):
+        return pygame.sprite.spritecollide(player, group, False)
+
+    def update(self, left, right, up, wat_up, wat_down, let_group, water_group, ladder_group):
+        if not self.other_collide(self, water_group) and not self.other_collide(self, ladder_group):
             if up:
                 if self.on_Ground:
                     self.vy = -JUMP_POWER
@@ -55,7 +57,7 @@ class Hero(pygame.sprite.Sprite):
 
             self.rect.x += self.vx
             self.collide(self.vx, 0, let_group)
-        elif collide(self, water_group):
+        elif self.other_collide(self, water_group):
             self.vy += (GRAVITY - TO_GRAVITY)
             if wat_up:
                 self.vy = -(HERO_SPEED - TO_SPEED)
@@ -70,7 +72,7 @@ class Hero(pygame.sprite.Sprite):
 
             self.rect.x += self.vx
             self.collide(self.vx, 0, let_group)
-        elif collide(self, ladder_group):
+        elif self.other_collide(self, ladder_group):
             if wat_up:
                 self.vy = -HERO_SPEED
             if wat_down:

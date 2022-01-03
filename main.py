@@ -1,6 +1,6 @@
 import os
 import pygame
-from hero import Hero
+from player import Hero
 from air import Air
 from ground import Ground
 from water import Water
@@ -104,7 +104,7 @@ def main():
                     is_right = False
                 elif event.key == pygame.K_LEFT:
                     is_left = False
-        hero.update(is_left, is_right, up, wat_up, wat_down)
+        hero.update(is_left, is_right, up, wat_up, wat_down, let_group, water_group, ladder_group)
         screen.fill("Black")
         ladder_group.draw(screen)
         water_group.draw(screen)
