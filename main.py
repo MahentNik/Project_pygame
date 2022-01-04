@@ -13,18 +13,32 @@ FPS = 60
 
 tile_width = tile_height = 70
 PRIMITIVE_LEVEL = [
-    "---------------------",
-    "-                   -",
-    "-                   -",
-    "-   @               -",
-    "-          w --     -",
-    "-          w       l-",
-    "-          w       l-",
-    "-          w       l-",
-    "-          w       l-",
-    "-          w   --  l-",
-    "-w        www      l-",
-    "---------------------"]
+    "--------------------------",
+    "-          w             -",
+    "-          w             -",
+    "-   @      w             -",
+    "-          w ------l--   -",
+    "-          w       l     -",
+    "-          w       l     -",
+    "-          w       l     -",
+    "-          w       l     -",
+    "-          w   --  l     -",
+    "-w        www      l     -",
+    "-                   -ww- -",
+    "---------------------ww---",
+    "-wwwww-  -wwwwwwwwwwwwwww-",
+    "-wwwwwwwwwwwwwwwwwwwwwwww-",
+    "-wwwwwwwwwwwwwwwwwwwwwwww-",
+    "-wwwwwwwwwwwwwwwwwwwwwwww-",
+    "-wwwwwwwww---wwwwwwwwwwww-",
+    "-wwwwwwwww- -wwwwwwwwwwww- ",
+    "-wwwwwwwwwwwwwwwwwwwwwwww-",
+    "-wwwwwwwwwwwwwwwwwwwwwwww-",
+    "-wwwwwwwwwwwwwwwwwwwwwwww-",
+    "--------------------------",
+
+
+]
 
 
 def load_image(name, color_key=None):
