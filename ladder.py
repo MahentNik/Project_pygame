@@ -1,5 +1,6 @@
 import pygame
 
+
 class Ladder(pygame.sprite.Sprite):
     def __init__(self, pos_x, pos_y, tile_width, tile_height, *groups):
         super().__init__(groups)

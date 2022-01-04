@@ -5,6 +5,7 @@ from air import Air
 from ground import Ground
 from water import Water
 from ladder import Ladder
+from camera import Camera
 
 # основные переменные
 WINDOW_SIZE = WIDTH, HEIGHT = 1600, 800
@@ -58,7 +59,7 @@ def create_level(name_level, hero_im, brick, air_im=None, water_im=None,
                 Water(x, y, tile_width, tile_height, water_group, all_sprites)
             elif name_level[y][x] == 'l':
                 Ladder(x, y, tile_width, tile_height, ladder_group, all_sprites)
-    return hero
+    return hero, x, y
 
 
 def main():
@@ -71,7 +72,8 @@ def main():
     brick = load_image("brickWall.png")
 
     clock = pygame.time.Clock()
-    hero = create_level(PRIMITIVE_LEVEL, hero_im, brick)
+    hero, level_x, level_y = create_level(PRIMITIVE_LEVEL, hero_im, brick)
+    camera = Camera((level_x, level_y), WIDTH, HEIGHT)
     is_left = is_right = False
     up = False
     wat_up = False
@@ -104,6 +106,11 @@ def main():
                     is_right = False
                 elif event.key == pygame.K_LEFT:
                     is_left = False
+        camera.update(hero)
+
+        for sprite in all_sprites:
+            camera.apply(sprite)
+
         hero.update(is_left, is_right, up, wat_up, wat_down, let_group, water_group, ladder_group)
         screen.fill("Black")
         ladder_group.draw(screen)
