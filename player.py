@@ -1,21 +1,44 @@
 import pygame
+import math
 
 JUMP_POWER = 10
 HERO_SPEED = 6
 GRAVITY = 0.35
 WATER_RESISTANCE = TO_GRAVITY, TO_SPEED = (0.3, 4.5)  # сопротивление движения в воде
 # потом следует вычислять эти параметры в процентах (пока так)
+HERO_HP = 3
+HERO_OXYGEN = 6
 
 
 class Hero(pygame.sprite.Sprite):
-    def __init__(self, pos_x, pos_y,  tile_width, tile_height, image,  *groups):
+    def __init__(self, pos_x, pos_y, tile_width, tile_height, image, *groups):
         super().__init__(groups)
-        self.vx = 0
-        self.vy = 0
-        self.on_Ground = False
         self.image = image
         self.rect = self.image.get_rect().move(tile_width * pos_x,
                                                tile_height * pos_y)
+
+        # статы
+        self.vx = 0
+        self.vy = 0
+        self.on_Ground = False
+
+        self.HP = HERO_HP
+        # self.HP_im = hp_image
+        # self.halfHP_im = halfhp_image
+        self.visible_hp = True
+        self.O2 = HERO_OXYGEN
+        # self.o2_im = o2_image
+        self.visible_o2 = False
+        self.reload_o2 = False
+
+        self.special_items = {
+            1: False,
+            2: False,
+            3: False
+        }
+
+        self.coin_counter = 0
+        # self.coin_im = coin_image
 
     def collide(self, vx, vy, lets):
         for tile in lets:
@@ -33,10 +56,23 @@ class Hero(pygame.sprite.Sprite):
                     self.rect.top = tile.rect.bottom
                     self.vy = 0
 
-    def other_collide(self, player, group):
-        return pygame.sprite.spritecollide(player, group, False)
+    def other_collide(self, player, group, status=False):
+        return pygame.sprite.spritecollide(player, group, status)
 
-    def update(self, left, right, up, wat_up, wat_down, let_group, water_group, ladder_group):
+    def show_stats(self):
+        # show_HP
+        # show-coins
+        if self.visible_o2:
+            # show_o2
+            pass
+        # статы будут создаваться отдельными холстами и накладываться на основной в верхнем левом углу
+
+    def update(self, left, right, up, wat_up, wat_down, let_group, water_group, ladder_group, enemy_group,
+               coin_group, air_group):
+
+        self.visible_o2 = False
+        self.reload_o2 = False
+
         if not self.other_collide(self, water_group) and not self.other_collide(self, ladder_group):
             if up:
                 if self.on_Ground:
@@ -91,6 +127,16 @@ class Hero(pygame.sprite.Sprite):
 
             self.rect.x += self.vx
             self.collide(self.vx, 0, let_group)
+
+        if self.other_collide(self, enemy_group):
+            self.HP -= 1
+        if self.other_collide(self, coin_group):
+            self.coin_counter += 1
+        if self.other_collide(self, water_group):
+            self.visible_o2 = True
+            if self.other_collide(self, air_group):
+                self.reload_o2 = True
+        self.show_stats()
 
         """if collide(self, let_group):
             if self.vx < 0:

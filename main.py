@@ -37,7 +37,6 @@ PRIMITIVE_LEVEL = [
     "-wwwwwwwwwwwwwwwwwwwwwwww-",
     "--------------------------",
 
-
 ]
 
 
@@ -125,7 +124,9 @@ def main():
         for sprite in all_sprites:
             camera.apply(sprite)
 
-        hero.update(is_left, is_right, up, wat_up, wat_down, let_group, water_group, ladder_group)
+        hero.update(is_left, is_right, up, wat_up, wat_down, let_group, water_group, ladder_group, enemy_group,
+                    coin_group, air_group
+                    )
         screen.fill("Black")
         ladder_group.draw(screen)
         water_group.draw(screen)
@@ -140,7 +141,7 @@ def main():
 
 coin_box_group = pygame.sprite.Group()  # если монеты будут просто спасниться на земле то эта группа не нужна
 # это является и препятствием и отдельной группой
-coin_group = pygame.sprite.Sprite()
+coin_group = pygame.sprite.Group()
 all_sprites = pygame.sprite.Group()
 hero_group = pygame.sprite.Group()
 air_group = pygame.sprite.Group()
