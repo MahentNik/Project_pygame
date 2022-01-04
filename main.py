@@ -1,5 +1,6 @@
-import os
 import pygame
+from load_image import load_image
+from snail import Snail
 from player import Hero
 from air import Air
 from ground import Ground
@@ -24,7 +25,7 @@ PRIMITIVE_LEVEL = [
     "-          w       l     -",
     "-          w   --  l     -",
     "-w        www      l     -",
-    "-                   -ww- -",
+    "-                s  -ww- -",
     "---------------------ww---",
     "-wwwww-  -wwwwwwwwwwwwwww-",
     "-wwwwwwwwwwwwwwwwwwwwwwww-",
@@ -40,24 +41,7 @@ PRIMITIVE_LEVEL = [
 ]
 
 
-def load_image(name, color_key=None):
-    fullname = os.path.join('data', name)
-    try:
-        image = pygame.image.load(fullname).convert()
-    except pygame.error as message:
-        print('Cannot load image:', name)
-        raise SystemExit(message)
-
-    if color_key is not None:
-        if color_key == -1:
-            color_key = image.get_at((0, 0))
-        image.set_colorkey(color_key)
-    else:
-        image = image.convert_alpha()
-    return image
-
-
-def create_level(name_level, hero_im, brick, air_im=None, water_im=None,
+def create_level(name_level, hero_im, brick, snail_images, air_im=None, water_im=None,
                  ladder_im=None):  # потом следует изменить отправление текстур (если будет несколько уровней)
     for y in range(len(name_level)):
         for x in range(len(name_level[y])):
@@ -72,20 +56,25 @@ def create_level(name_level, hero_im, brick, air_im=None, water_im=None,
                 Water(x, y, tile_width, tile_height, water_group, all_sprites)
             elif name_level[y][x] == 'l':
                 Ladder(x, y, tile_width, tile_height, ladder_group, all_sprites)
+            elif name_level[y][x] == 's':
+                Air(x, y, tile_width, tile_height, air_group, all_sprites)
+                Snail(x, y, tile_width, tile_height, snail_images, enemy_group, all_sprites)
     return hero, x, y
 
 
 def main():
     pygame.init()
 
+    pygame.display.set_caption('game')
     screen = pygame.display.set_mode(WINDOW_SIZE)
 
     # загрузка картинок
-    hero_im = load_image('p1_stand.png')
+    hero_im = load_image('p1_stand.png', -1)
     brick = load_image("brickWall.png")
+    snail_image = load_image("snailWalk1.png", -1)
 
     clock = pygame.time.Clock()
-    hero, level_x, level_y = create_level(PRIMITIVE_LEVEL, hero_im, brick)
+    hero, level_x, level_y = create_level(PRIMITIVE_LEVEL, hero_im, brick, snail_image)
     camera = Camera((level_x, level_y), WIDTH, HEIGHT)
     is_left = is_right = False
     up = False
@@ -125,14 +114,16 @@ def main():
             camera.apply(sprite)
 
         hero.update(is_left, is_right, up, wat_up, wat_down, let_group, water_group, ladder_group, enemy_group,
-                    coin_group, air_group
-                    )
+                    coin_group, air_group)
+        enemy_group.update()
+
         screen.fill("Black")
         ladder_group.draw(screen)
         water_group.draw(screen)
         air_group.draw(screen)
         hero_group.draw(screen)
         let_group.draw(screen)
+        enemy_group.draw(screen)
 
         pygame.display.flip()
         clock.tick(FPS)

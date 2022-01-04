@@ -12,7 +12,7 @@ HERO_OXYGEN = 6
 
 class Hero(pygame.sprite.Sprite):
     def __init__(self, pos_x, pos_y, tile_width, tile_height, image, *groups):
-        super().__init__(groups)
+        super().__init__(*groups)
         self.image = image
         self.rect = self.image.get_rect().move(tile_width * pos_x,
                                                tile_height * pos_y)
@@ -155,4 +155,3 @@ class Hero(pygame.sprite.Sprite):
     #                    3) Счетчик монет (от 0 до ...)
     #                    4) ...
     # еще один вопрос - будет ли наш персонаж атаковать? (можно убрать эту возможность) опять же по времени
-
