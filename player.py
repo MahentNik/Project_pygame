@@ -11,9 +11,10 @@ HERO_OXYGEN = 6
 
 
 class Hero(pygame.sprite.Sprite):
-    def __init__(self, pos_x, pos_y, tile_width, tile_height, image, *groups):
+    def __init__(self, pos_x, pos_y, tile_width, tile_height, hero_im, no_hp_im, half_hp_im, hp_im,
+                 o2_im, coin_im, *groups):
         super().__init__(groups)
-        self.image = image
+        self.image = hero_im
         self.rect = self.image.get_rect().move(tile_width * pos_x,
                                                tile_height * pos_y)
 
@@ -23,11 +24,12 @@ class Hero(pygame.sprite.Sprite):
         self.on_Ground = False
 
         self.HP = HERO_HP
-        # self.HP_im = hp_image
-        # self.halfHP_im = halfhp_image
+        self.HP_im = hp_im
+        self.halfHP_im = half_hp_im
+        self.no_hp_im = no_hp_im
         self.visible_hp = True
         self.O2 = HERO_OXYGEN
-        # self.o2_im = o2_image
+        self.o2_im = o2_im
         self.visible_o2 = False
         self.reload_o2 = False
 
@@ -38,7 +40,7 @@ class Hero(pygame.sprite.Sprite):
         }
 
         self.coin_counter = 0
-        # self.coin_im = coin_image
+        self.coin_im = coin_im
 
     def collide(self, vx, vy, lets):
         for tile in lets:

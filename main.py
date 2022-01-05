@@ -57,7 +57,7 @@ def load_image(name, color_key=None):
     return image
 
 
-def create_level(name_level, hero_im, brick, air_im=None, water_im=None,
+def create_level(name_level, hero_im, brick, no_hp_im, half_hp_im, hp_im, o2_im, coin_im, air_im=None, water_im=None,
                  ladder_im=None):  # потом следует изменить отправление текстур (если будет несколько уровней)
     for y in range(len(name_level)):
         for x in range(len(name_level[y])):
@@ -67,7 +67,8 @@ def create_level(name_level, hero_im, brick, air_im=None, water_im=None,
                 Ground(x, y, tile_width, tile_height, brick, let_group, all_sprites)
             elif name_level[y][x] == '@':
                 Air(x, y, tile_width, tile_height, air_group, all_sprites)
-                hero = Hero(x, y, tile_width, tile_height, hero_im, hero_group, all_sprites)
+                hero = Hero(x, y, tile_width, tile_height, hero_im, no_hp_im, half_hp_im, hp_im, o2_im, coin_im,
+                            hero_group, all_sprites)
             elif name_level[y][x] == 'w':
                 Water(x, y, tile_width, tile_height, water_group, all_sprites)
             elif name_level[y][x] == 'l':
@@ -83,9 +84,14 @@ def main():
     # загрузка картинок
     hero_im = load_image('p1_stand.png')
     brick = load_image("brickWall.png")
+    no_hp_im = load_image("no_hp.png")
+    half_hp_im = load_image("half_hp.png")
+    hp_im = load_image("hp.png")
+    o2_im = load_image("o2.png")
+    coin_im = load_image("coin.png")
 
     clock = pygame.time.Clock()
-    hero, level_x, level_y = create_level(PRIMITIVE_LEVEL, hero_im, brick)
+    hero, level_x, level_y = create_level(PRIMITIVE_LEVEL, hero_im, brick, no_hp_im, half_hp_im, hp_im, o2_im, coin_im)
     camera = Camera((level_x, level_y), WIDTH, HEIGHT)
     is_left = is_right = False
     up = False
