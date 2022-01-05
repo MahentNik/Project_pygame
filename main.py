@@ -67,14 +67,16 @@ def main():
 
     pygame.display.set_caption('game')
     screen = pygame.display.set_mode(WINDOW_SIZE)
+    screen.fill(pygame.Color(117, 238, 253))
 
     # загрузка картинок
     hero_im = load_image('p1_stand.png', -1)
-    brick = load_image("brickWall.png")
+    brick = load_image("brickWall.png", -1)
     snail_image = load_image("snailWalk1.png", -1)
+    air_image = load_image('bg.png')
 
     clock = pygame.time.Clock()
-    hero, level_x, level_y = create_level(PRIMITIVE_LEVEL, hero_im, brick, snail_image)
+    hero, level_x, level_y = create_level(PRIMITIVE_LEVEL, hero_im, brick, snail_image, air_image)
     camera = Camera((level_x, level_y), WIDTH, HEIGHT)
     is_left = is_right = False
     up = False
@@ -117,7 +119,7 @@ def main():
                     coin_group, air_group)
         enemy_group.update()
 
-        screen.fill("Black")
+        screen.fill(pygame.Color(117, 238, 253))
         ladder_group.draw(screen)
         water_group.draw(screen)
         air_group.draw(screen)
