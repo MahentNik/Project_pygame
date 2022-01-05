@@ -2,7 +2,7 @@ import pygame
 
 
 class Items(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self, pos_x, pos_y, *groups):
         pass
     # класс предметов которые жат на земле
     # их можно подобрать
