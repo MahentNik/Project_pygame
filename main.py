@@ -6,6 +6,7 @@ from ground import Ground
 from water import Water
 from ladder import Ladder
 from camera import Camera
+from hud import Hud
 
 # основные переменные
 WINDOW_SIZE = WIDTH, HEIGHT = 1600, 800
@@ -22,7 +23,7 @@ PRIMITIVE_LEVEL = [
     "-          w       l     -",
     "-          w       l     -",
     "-          w       l     -",
-    "-          w   --  l     -",
+    "-          w   --- l     -",
     "-w        www      l     -",
     "-                   -ww- -",
     "---------------------ww---",
@@ -57,7 +58,7 @@ def load_image(name, color_key=None):
     return image
 
 
-def create_level(name_level, hero_im, brick, no_hp_im, half_hp_im, hp_im, o2_im, coin_im, air_im=None, water_im=None,
+def create_level(name_level, hero_im, brick, air_im=None, water_im=None,
                  ladder_im=None):  # потом следует изменить отправление текстур (если будет несколько уровней)
     for y in range(len(name_level)):
         for x in range(len(name_level[y])):
@@ -67,8 +68,7 @@ def create_level(name_level, hero_im, brick, no_hp_im, half_hp_im, hp_im, o2_im,
                 Ground(x, y, tile_width, tile_height, brick, let_group, all_sprites)
             elif name_level[y][x] == '@':
                 Air(x, y, tile_width, tile_height, air_group, all_sprites)
-                hero = Hero(x, y, tile_width, tile_height, hero_im, no_hp_im, half_hp_im, hp_im, o2_im, coin_im,
-                            hero_group, all_sprites)
+                hero = Hero(x, y, tile_width, tile_height, hero_im, hero_group, all_sprites)
             elif name_level[y][x] == 'w':
                 Water(x, y, tile_width, tile_height, water_group, all_sprites)
             elif name_level[y][x] == 'l':
@@ -91,8 +91,9 @@ def main():
     coin_im = load_image("coin.png")
 
     clock = pygame.time.Clock()
-    hero, level_x, level_y = create_level(PRIMITIVE_LEVEL, hero_im, brick, no_hp_im, half_hp_im, hp_im, o2_im, coin_im)
+    hero, level_x, level_y = create_level(PRIMITIVE_LEVEL, hero_im, brick)
     camera = Camera((level_x, level_y), WIDTH, HEIGHT)
+    hud = Hud(hero, 0, 0, no_hp_im, half_hp_im, hp_im, o2_im, coin_im, hud_group, all_sprites)
     is_left = is_right = False
     up = False
     wat_up = False
@@ -133,12 +134,14 @@ def main():
         hero.update(is_left, is_right, up, wat_up, wat_down, let_group, water_group, ladder_group, enemy_group,
                     coin_group, air_group
                     )
+        hud.update(water_group, enemy_group, coin_group, air_group)
         screen.fill("Black")
         ladder_group.draw(screen)
         water_group.draw(screen)
         air_group.draw(screen)
         hero_group.draw(screen)
         let_group.draw(screen)
+        hud_group.draw(screen)
 
         pygame.display.flip()
         clock.tick(FPS)
@@ -156,6 +159,7 @@ let_group = pygame.sprite.Group()  # стены
 ladder_group = pygame.sprite.Group()
 items_group = pygame.sprite.Group()
 enemy_group = pygame.sprite.Group()
+hud_group = pygame.sprite.Group()
 
 if __name__ == '__main__':
     main()
