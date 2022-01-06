@@ -73,6 +73,10 @@ def main():
     screen = pygame.display.set_mode(WINDOW_SIZE)
     pygame.mouse.set_visible(False)
 
+    # музыка
+    pygame.mixer.music.load('data/song.ogg')
+    pygame.mixer.music.play()
+
     # загрузка картинок
     hero_im = load_image('p1_stand.png', -1)
     brick = load_image('brickWall.png', -1)
