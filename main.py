@@ -7,6 +7,7 @@ from ground import Ground
 from water import Water
 from ladder import Ladder
 from camera import Camera
+from fish import Fish
 
 # основные переменные
 WINDOW_SIZE = WIDTH, HEIGHT = 1600, 800
@@ -28,8 +29,8 @@ PRIMITIVE_LEVEL = [
     "-                s  -ww- -",
     "---------------------ww---",
     "-wwwww-  -wwwwwwwwwwwwwww-",
-    "-wwwwwwwwwwwwwwwwwwwwwwww-",
-    "-wwwwwwwwwwwwwwwwwwwwwwww-",
+    "-fwwwwwwwwwwwwwwwwwwwwwww-",
+    "-wwwwwwwwfwwwwwwwwwwwwwww-",
     "-wwwwwwwwwwwwwwwwwwwwwwww-",
     "-wwwwwwwww---wwwwwwwwwwww-",
     "-wwwwwwwww- -wwwwwwwwwwww- ",
@@ -41,24 +42,27 @@ PRIMITIVE_LEVEL = [
 ]
 
 
-def create_level(name_level, hero_im, brick, snail_images, air_im=None, water_im=None,
+def create_level(name_level, images, air_im=None, water_im=None,
                  ladder_im=None):  # потом следует изменить отправление текстур (если будет несколько уровней)
     for y in range(len(name_level)):
         for x in range(len(name_level[y])):
             if name_level[y][x] == ' ':
                 Air(x, y, tile_width, tile_height, air_group, all_sprites)
             elif name_level[y][x] == '-':
-                Ground(x, y, tile_width, tile_height, brick, let_group, all_sprites)
+                Ground(x, y, tile_width, tile_height, images[1], let_group, all_sprites)
             elif name_level[y][x] == '@':
                 Air(x, y, tile_width, tile_height, air_group, all_sprites)
-                hero = Hero(x, y, tile_width, tile_height, hero_im, hero_group, all_sprites)
+                hero = Hero(x, y, tile_width, tile_height, images[0], hero_group, all_sprites)
             elif name_level[y][x] == 'w':
-                Water(x, y, tile_width, tile_height, water_group, all_sprites)
+                Water(x, y, tile_width, tile_height, images[5], water_group, all_sprites)
             elif name_level[y][x] == 'l':
-                Ladder(x, y, tile_width, tile_height, ladder_group, all_sprites)
+                Ladder(x, y, tile_width, tile_height, images[4], ladder_group, all_sprites)
             elif name_level[y][x] == 's':
                 Air(x, y, tile_width, tile_height, air_group, all_sprites)
-                Snail(x, y, tile_width, tile_height, snail_images, enemy_group, all_sprites)
+                Snail(x, y, tile_width, tile_height, images[2], enemy_group, all_sprites)
+            elif name_level[y][x] == 'f':
+                Water(x, y, tile_width, tile_height, images[5], water_group, all_sprites)
+                Fish(x, y, tile_width, tile_height, images[3], enemy_group, all_sprites)
     return hero, x, y
 
 
@@ -67,16 +71,18 @@ def main():
 
     pygame.display.set_caption('game')
     screen = pygame.display.set_mode(WINDOW_SIZE)
-    screen.fill(pygame.Color(117, 238, 253))
 
     # загрузка картинок
     hero_im = load_image('p1_stand.png', -1)
-    brick = load_image("brickWall.png", -1)
-    snail_image = load_image("snailWalk1.png", -1)
-    air_image = load_image('bg.png')
+    brick = load_image('brickWall.png', -1)
+    snail_image = load_image('snailWalk1.png', -1)
+    fish_image = load_image('fishSwim1.png', -1)
+    ladder_image = load_image('ladder_mid.png', -2)
+    water_image = load_image('liquidWater.png')
+    images = [hero_im, brick, snail_image, fish_image, ladder_image, water_image]
 
     clock = pygame.time.Clock()
-    hero, level_x, level_y = create_level(PRIMITIVE_LEVEL, hero_im, brick, snail_image, air_image)
+    hero, level_x, level_y = create_level(PRIMITIVE_LEVEL, images)
     camera = Camera((level_x, level_y), WIDTH, HEIGHT)
     is_left = is_right = False
     up = False
@@ -119,7 +125,7 @@ def main():
                     coin_group, air_group)
         enemy_group.update()
 
-        screen.fill(pygame.Color(117, 238, 253))
+        screen.fill(pygame.Color(218, 187, 253))
         ladder_group.draw(screen)
         water_group.draw(screen)
         air_group.draw(screen)
