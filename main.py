@@ -71,6 +71,7 @@ def main():
 
     pygame.display.set_caption('game')
     screen = pygame.display.set_mode(WINDOW_SIZE)
+    pygame.mouse.set_visible(False)
 
     # загрузка картинок
     hero_im = load_image('p1_stand.png', -1)
