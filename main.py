@@ -59,11 +59,11 @@ def create_level(name_level, images, air_im=None, water_im=None,
                 Ladder(x, y, tile_width, tile_height, images[4], ladder_group, all_sprites)
             elif name_level[y][x] == 's':
                 Air(x, y, tile_width, tile_height, air_group, all_sprites)
-                Snail(x, y, tile_width, tile_height, images[2], enemy_group, all_sprites)
+                snail = Snail(x, y, tile_width, tile_height, images[2], enemy_group, all_sprites)
             elif name_level[y][x] == 'f':
                 Water(x, y, tile_width, tile_height, images[5], water_group, all_sprites)
                 Fish(x, y, tile_width, tile_height, images[3], enemy_group, all_sprites)
-    return hero, x, y
+    return hero, snail, x, y
 
 
 def main():
@@ -71,7 +71,7 @@ def main():
 
     pygame.display.set_caption('game')
     screen = pygame.display.set_mode(WINDOW_SIZE)
-    pygame.mouse.set_visible(False)
+    pygame.mouse.set_visible(True)
 
     # музыка
     pygame.mixer.music.load('data/song.ogg')
@@ -80,19 +80,22 @@ def main():
     # загрузка картинок
     hero_im = load_image('p1_stand.png', -1)
     brick = load_image('brickWall.png', -1)
-    snail_image = load_image('snailWalk1.png', -1)
+    snail_images = [load_image('snailWalk1.png', -1), load_image('snailWalk2.png', -1)]
     fish_image = load_image('fishSwim1.png', -1)
     ladder_image = load_image('ladder_mid.png', -2)
     water_image = load_image('liquidWater.png')
-    images = [hero_im, brick, snail_image, fish_image, ladder_image, water_image]
+    images = [hero_im, brick, snail_images, fish_image, ladder_image, water_image]
 
     clock = pygame.time.Clock()
-    hero, level_x, level_y = create_level(PRIMITIVE_LEVEL, images)
+    hero, snail, level_x, level_y = create_level(PRIMITIVE_LEVEL, images)
     camera = Camera((level_x, level_y), WIDTH, HEIGHT)
     is_left = is_right = False
     up = False
     wat_up = False
     wat_down = False
+
+    snail_event = pygame.USEREVENT + 1
+    pygame.time.set_timer(snail_event, 20)
 
     running = True
     while running:
@@ -121,6 +124,10 @@ def main():
                     is_right = False
                 elif event.key == pygame.K_LEFT:
                     is_left = False
+            if event.type == snail_event:
+                snail.frame_change()
+                print(1)
+
         camera.update(hero)
 
         for sprite in all_sprites:
