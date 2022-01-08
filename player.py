@@ -1,5 +1,6 @@
 import pygame
 import math
+from items import Coin
 
 JUMP_POWER = 10
 HERO_SPEED = 6
@@ -11,11 +12,13 @@ HERO_OXYGEN = 6
 
 
 class Hero(pygame.sprite.Sprite):
-    def __init__(self, pos_x, pos_y, tile_width, tile_height, image, *groups):
+    def __init__(self, pos_x, pos_y, tile_width, tile_height, image, coin_im, coin_group, all_sprites, *groups):
         super().__init__(groups)
         self.image = image
         self.rect = self.image.get_rect().move(tile_width * pos_x,
                                                tile_height * pos_y)
+        self.coin_im = coin_im
+        self.group = coin_group, all_sprites
 
         # статы
         self.vx = 0
@@ -53,7 +56,11 @@ class Hero(pygame.sprite.Sprite):
                     self.vy = 0
 
                 if vy < 0:
-                    self.other_collide(self, coin_box_group, True)
+                    if self.other_collide(self, coin_box_group):
+                        sp = self.other_collide(self, coin_box_group, True)
+                        for i in sp:
+                            x, y = i.rect.x, i.rect.y
+                            Coin(x, y - 1, 70, 70, self.coin_im, self.group)
                     self.rect.top = tile.rect.bottom
                     self.vy = 0
 
@@ -131,7 +138,7 @@ class Hero(pygame.sprite.Sprite):
 
         if self.other_collide(self, enemy_group):
             self.HP -= 1
-        if self.other_collide(self, coin_group):
+        if self.other_collide(self, coin_group, True):
             self.coin_counter += 1
         if self.other_collide(self, water_group):
             self.visible_o2 = True
