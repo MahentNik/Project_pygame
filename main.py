@@ -45,7 +45,7 @@ PRIMITIVE_LEVEL = [
 ]
 
 
-def create_level(name_level, hero_im, brick, coin_box, coin_im, images):
+def create_level(name_level, images):
     for y in range(len(name_level)):
         for x in range(len(name_level[y])):
             if name_level[y][x] == ' ':
@@ -54,7 +54,7 @@ def create_level(name_level, hero_im, brick, coin_box, coin_im, images):
                 Ground(x, y, tile_width, tile_height, images[1], let_group, ground_group, all_sprites)
             elif name_level[y][x] == '@':
                 Air(x, y, tile_width, tile_height, air_group, all_sprites)
-                hero = Hero(x, y, tile_width, tile_height, images[0], coin_im, coin_group, all_sprites,
+                hero = Hero(x, y, tile_width, tile_height, images[0], images[7], coin_group, all_sprites,
                             hero_group, all_sprites)
             elif name_level[y][x] == 'w':
                 Water(x, y, tile_width, tile_height, images[5], water_group, all_sprites)
@@ -92,12 +92,12 @@ def main():
     fish_image = load_image('fishSwim1.png', -1)
     ladder_image = load_image('ladder_mid.png', -2)
     water_image = load_image('liquidWater.png')
-    coin_box = load_image("boxCoin.png")
+    coin_box = load_image("boxCoin.png", -1)
     coin_im = load_image("coinGold.png", -1)
     images = [hero_im, brick, snail_image, fish_image, ladder_image, water_image, coin_box, coin_im]
 
     clock = pygame.time.Clock()
-    hero, level_x, level_y = create_level(PRIMITIVE_LEVEL, hero_im, brick, coin_box, coin_im, images)
+    hero, level_x, level_y = create_level(PRIMITIVE_LEVEL, images)
     camera = Camera((level_x, level_y), WIDTH, HEIGHT)
     is_left = is_right = False
     up = False
@@ -140,7 +140,7 @@ def main():
                     coin_group, air_group, coin_box_group
                     )
         coin_group.update(ground_group)
-        screen.fill("Black")
+        screen.fill((218, 187, 253))
         ladder_group.draw(screen)
         water_group.draw(screen)
         air_group.draw(screen)
