@@ -45,8 +45,7 @@ PRIMITIVE_LEVEL = [
 ]
 
 
-def create_level(name_level, hero_im, brick, air_im=None, water_im=None,
-                 ladder_im=None):  # потом следует изменить отправление текстур (если будет несколько уровней)
+def create_level(name_level, hero_im, brick, coin_box, coin_im, images):
     for y in range(len(name_level)):
         for x in range(len(name_level[y])):
             if name_level[y][x] == ' ':
@@ -98,7 +97,7 @@ def main():
     coin_im = load_image("coinGold.png", -1)
 
     clock = pygame.time.Clock()
-    hero, level_x, level_y = create_level(PRIMITIVE_LEVEL, hero_im, brick, coin_box, coin_im)
+    hero, level_x, level_y = create_level(PRIMITIVE_LEVEL, hero_im, brick, coin_box, coin_im, images)
     camera = Camera((level_x, level_y), WIDTH, HEIGHT)
     is_left = is_right = False
     up = False
