@@ -87,16 +87,19 @@ def main():
     # загрузка картинок
     hero_im = load_image('p1_stand.png')
     brick = load_image("brickWall.png")
-    no_hp_im = load_image("no_hp.png")
-    half_hp_im = load_image("half_hp.png")
-    hp_im = load_image("hp.png")
+    no_hp_im = load_image("no_hp.png", -1)
+    half_hp_im = load_image("half_hp.png", -1)
+    hp_im = load_image("hp.png", -1)
     o2_im = load_image("o2.png")
-    coin_im = load_image("coin.png")
+    coin_im = load_image("coin.png", -1)
+    numbers = load_image("hud_0.png"), load_image("hud_1.png"), load_image("hud_2.png"), load_image(
+        "hud_3.png"), load_image("hud_4.png"), load_image("hud_5.png"), load_image("hud_6.png"), load_image(
+        "hud_7.png"), load_image("hud_8.png"), load_image("hud_9.png")
 
     clock = pygame.time.Clock()
     hero, level_x, level_y = create_level(PRIMITIVE_LEVEL, hero_im, brick)
     camera = Camera((level_x, level_y), WIDTH, HEIGHT)
-    hud = Hud(hero, 0, 0, no_hp_im, half_hp_im, hp_im, o2_im, coin_im, hud_group, all_sprites)
+    hud = Hud(hero, 0, 0, no_hp_im, half_hp_im, hp_im, o2_im, coin_im, numbers, hud_group, all_sprites)
     is_left = is_right = False
     up = False
     wat_up = False
@@ -163,8 +166,9 @@ def main():
 
         pygame.display.flip()
         clock.tick(FPS)
-    pygame.quit()
 
+
+pygame.quit()
 
 coin_box_group = pygame.sprite.Group()  # если монеты будут просто спасниться на земле то эта группа не нужна
 # это является и препятствием и отдельной группой

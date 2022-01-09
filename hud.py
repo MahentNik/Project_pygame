@@ -10,7 +10,7 @@ RELOAD__02 = pygame.USEREVENT + 78  # перезарядка отнимания 
 
 
 class Hud(pygame.sprite.Sprite):
-    def __init__(self, player, pos_x, pos_y, no_hp_im, half_hp_im, hp_im, o2_im, coin_im, *groups):
+    def __init__(self, player, pos_x, pos_y, no_hp_im, half_hp_im, hp_im, o2_im, coin_im, numbers, *groups):
         super().__init__(groups)
 
         self.hero = player
@@ -32,6 +32,9 @@ class Hud(pygame.sprite.Sprite):
         self.O2 = HERO_OXYGEN
         self.o2_im = o2_im
         self.visible_o2 = False
+
+        # цифры
+        self.numbers = numbers
 
         self.show_stats()
 
@@ -66,23 +69,41 @@ class Hud(pygame.sprite.Sprite):
         self.show_stats()
 
     def show_stats(self):
+        change_pos = 50
+        hp = self.HP
+        coins = self.coin_counter
+        coins = str(coins).split()
+
+        photo_0, photo_1, photo_2, photo_3, photo_4, photo_5, photo_6, photo_7, photo_8, photo_9 = self.numbers
+
         hud_screen = pygame.Surface((300, 150))
 
-        hp_screen = self.HP_im
+        pos_x = 0
+        for i in range(HERO_HP):
+            if hp >= 1:
+                hp -= 1
+                hud_screen.blit(self.HP_im, (pos_x, 0))
+            elif hp <= 0:
+                hud_screen.blit(self.no_hp_im, (pos_x, 0))
+            elif 0 < hp < 1:
+                hp -= 0.5
+                hud_screen.blit(self.halfHP_im, (pos_x, 0))
+            pos_x += change_pos
 
-        o2_screen = self.o2_im
-
-        font = pygame.font.Font(None, 50)
-        coins = font.render(str(self.coin_counter), True, (100, 255, 100))
-        coin_screen = self.coin_im
-        coin_screen.blit(coins, [70, 50, 0, 0])
-
-        # потом все эти холсты надо поместить в один
-        hud_screen.blit(hp_screen, [0, 0, 0, 0])
-        hud_screen.blit(coin_screen, [0, 50, 0, 0])
         if self.visible_o2:
-            hud_screen.blit(o2_screen, [0, 100, 0, 0])
-            # hud_screen.blit(o2_screen, (0, 100))
-        # статы будут создаваться отдельными холстами и накладываться на основной в верхнем левом углу
+            pos_x = 0
+            for _ in range(self.O2):
+                hud_screen.blit(self.o2_im, (pos_x, 50))
+                pos_x += change_pos
+
+        pos_x = 0
+        hud_screen.blit(self.coin_im, (pos_x, 100))
+        pos_x += change_pos * 1.5
+        change_pos = 32
+        for i in coins:
+            name_photo = eval("photo_" + i)
+            hud_screen.blit(name_photo, (pos_x, 106))
+            pos_x += change_pos
+
         self.image = hud_screen
         self.rect = self.image.get_rect()
