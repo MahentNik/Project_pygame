@@ -139,6 +139,7 @@ def main():
         hero.update(is_left, is_right, up, wat_up, wat_down, let_group, water_group, ladder_group, enemy_group,
                     coin_group, air_group, coin_box_group
                     )
+        enemy_group.update()
         coin_group.update(ground_group)
         screen.fill((218, 187, 253))
         ladder_group.draw(screen)
@@ -148,6 +149,7 @@ def main():
         ground_group.draw(screen)
         coin_box_group.draw(screen)
         coin_group.draw(screen)
+        enemy_group.draw(screen)
 
         pygame.display.flip()
         clock.tick(FPS)
