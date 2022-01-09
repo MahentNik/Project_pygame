@@ -51,20 +51,20 @@ def create_level(name_level, hero_im, brick, coin_box, coin_im, images):
             if name_level[y][x] == ' ':
                 Air(x, y, tile_width, tile_height, air_group, all_sprites)
             elif name_level[y][x] == '-':
-                Ground(x, y, tile_width, tile_height, brick, let_group, ground_group, all_sprites)
+                Ground(x, y, tile_width, tile_height, images[1], let_group, ground_group, all_sprites)
             elif name_level[y][x] == '@':
                 Air(x, y, tile_width, tile_height, air_group, all_sprites)
-                hero = Hero(x, y, tile_width, tile_height, hero_im, coin_im, coin_group, all_sprites,
+                hero = Hero(x, y, tile_width, tile_height, images[0], coin_im, coin_group, all_sprites,
                             hero_group, all_sprites)
             elif name_level[y][x] == 'w':
-                Water(x, y, tile_width, tile_height, water_group, all_sprites)
+                Water(x, y, tile_width, tile_height, images[5], water_group, all_sprites)
             elif name_level[y][x] == 'l':
-                Ladder(x, y, tile_width, tile_height, ladder_group, all_sprites)
+                Ladder(x, y, tile_width, tile_height, images[4], ladder_group, all_sprites)
             elif name_level[y][x] == "k":
-                CoinBox(x, y, tile_width, tile_height, coin_box, let_group, coin_box_group, air_group, all_sprites)
+                CoinBox(x, y, tile_width, tile_height, images[6], let_group, coin_box_group, air_group, all_sprites)
             elif name_level[y][x] == "c":
                 Air(x, y, tile_width, tile_height, air_group, all_sprites)
-                Coin(x, y - 1, 70, 70, coin_im, coin_group, all_sprites)
+                Coin(x, y - 1, tile_width, tile_height, images[7], coin_group, all_sprites)
             elif name_level[y][x] == 's':
                 Air(x, y, tile_width, tile_height, air_group, all_sprites)
                 Snail(x, y, tile_width, tile_height, images[2], enemy_group, all_sprites)
@@ -92,9 +92,9 @@ def main():
     fish_image = load_image('fishSwim1.png', -1)
     ladder_image = load_image('ladder_mid.png', -2)
     water_image = load_image('liquidWater.png')
-    images = [hero_im, brick, snail_image, fish_image, ladder_image, water_image]
     coin_box = load_image("boxCoin.png")
     coin_im = load_image("coinGold.png", -1)
+    images = [hero_im, brick, snail_image, fish_image, ladder_image, water_image, coin_box, coin_im]
 
     clock = pygame.time.Clock()
     hero, level_x, level_y = create_level(PRIMITIVE_LEVEL, hero_im, brick, coin_box, coin_im, images)
