@@ -15,6 +15,7 @@ from items import Coin
 # основные переменные
 WINDOW_SIZE = WIDTH, HEIGHT = 1600, 800
 FPS = 60
+REPEAT_MUSIC = pygame.USEREVENT + 1
 
 tile_width = tile_height = 70
 PRIMITIVE_LEVEL = [
@@ -94,6 +95,7 @@ def main():
     images = [hero_im, brick, snail_image, fish_image, ladder_image, water_image, coin_box, coin_im]
 
     clock = pygame.time.Clock()
+    pygame.time.set_timer(REPEAT_MUSIC, 85000)
     hero, level_x, level_y = create_level(PRIMITIVE_LEVEL, images)
     camera = Camera((level_x, level_y), WIDTH, HEIGHT)
     is_left = is_right = False
@@ -106,6 +108,9 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+            if event.type == REPEAT_MUSIC:
+                print("Мое событие сработало")
+                pygame.mixer.music.play()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     up = True
