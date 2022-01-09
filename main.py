@@ -1,13 +1,16 @@
+import os
 import pygame
 from load_image import load_image
 from snail import Snail
+from fish import Fish
 from player import Hero
 from air import Air
 from ground import Ground
 from water import Water
 from ladder import Ladder
 from camera import Camera
-from fish import Fish
+from coin_box import CoinBox
+from items import Coin
 
 # основные переменные
 WINDOW_SIZE = WIDTH, HEIGHT = 1600, 800
@@ -21,16 +24,16 @@ PRIMITIVE_LEVEL = [
     "-   @      w             -",
     "-          w ------l--   -",
     "-          w       l     -",
+    "-       c  w       l     -",
+    "-      --- w       l     -",
     "-          w       l     -",
-    "-          w       l     -",
-    "-          w       l     -",
-    "-          w   --  l     -",
-    "-w        www      l     -",
-    "-                s  -ww- -",
+    "--k-k-k-   w   -k- l     -",
+    "-                  l     -",
+    "-                   -ww- -",
     "---------------------ww---",
     "-wwwww-  -wwwwwwwwwwwwwww-",
-    "-fwwwwwwwwwwwwwwwwwwwwwww-",
-    "-wwwwwwwwfwwwwwwwwwwwwwww-",
+    "-wwwwwwwwwwwwwwwwwwwwwwww-",
+    "-wwwwwwwwwwwwwwwwwwwwwwww-",
     "-wwwwwwwwwwwwwwwwwwwwwwww-",
     "-wwwwwwwww---wwwwwwwwwwww-",
     "-wwwwwwwww- -wwwwwwwwwwww- ",
@@ -42,21 +45,27 @@ PRIMITIVE_LEVEL = [
 ]
 
 
-def create_level(name_level, images, air_im=None, water_im=None,
+def create_level(name_level, hero_im, brick, air_im=None, water_im=None,
                  ladder_im=None):  # потом следует изменить отправление текстур (если будет несколько уровней)
     for y in range(len(name_level)):
         for x in range(len(name_level[y])):
             if name_level[y][x] == ' ':
                 Air(x, y, tile_width, tile_height, air_group, all_sprites)
             elif name_level[y][x] == '-':
-                Ground(x, y, tile_width, tile_height, images[1], let_group, all_sprites)
+                Ground(x, y, tile_width, tile_height, brick, let_group, ground_group, all_sprites)
             elif name_level[y][x] == '@':
                 Air(x, y, tile_width, tile_height, air_group, all_sprites)
-                hero = Hero(x, y, tile_width, tile_height, images[0], hero_group, all_sprites)
+                hero = Hero(x, y, tile_width, tile_height, hero_im, coin_im, coin_group, all_sprites,
+                            hero_group, all_sprites)
             elif name_level[y][x] == 'w':
-                Water(x, y, tile_width, tile_height, images[5], water_group, all_sprites)
+                Water(x, y, tile_width, tile_height, water_group, all_sprites)
             elif name_level[y][x] == 'l':
-                Ladder(x, y, tile_width, tile_height, images[4], ladder_group, all_sprites)
+                Ladder(x, y, tile_width, tile_height, ladder_group, all_sprites)
+            elif name_level[y][x] == "k":
+                CoinBox(x, y, tile_width, tile_height, coin_box, let_group, coin_box_group, air_group, all_sprites)
+            elif name_level[y][x] == "c":
+                Air(x, y, tile_width, tile_height, air_group, all_sprites)
+                Coin(x, y - 1, 70, 70, coin_im, coin_group, all_sprites)
             elif name_level[y][x] == 's':
                 Air(x, y, tile_width, tile_height, air_group, all_sprites)
                 Snail(x, y, tile_width, tile_height, images[2], enemy_group, all_sprites)
@@ -85,9 +94,11 @@ def main():
     ladder_image = load_image('ladder_mid.png', -2)
     water_image = load_image('liquidWater.png')
     images = [hero_im, brick, snail_image, fish_image, ladder_image, water_image]
+    coin_box = load_image("boxCoin.png")
+    coin_im = load_image("coinGold.png", -1)
 
     clock = pygame.time.Clock()
-    hero, level_x, level_y = create_level(PRIMITIVE_LEVEL, images)
+    hero, level_x, level_y = create_level(PRIMITIVE_LEVEL, hero_im, brick, coin_box, coin_im)
     camera = Camera((level_x, level_y), WIDTH, HEIGHT)
     is_left = is_right = False
     up = False
@@ -127,24 +138,26 @@ def main():
             camera.apply(sprite)
 
         hero.update(is_left, is_right, up, wat_up, wat_down, let_group, water_group, ladder_group, enemy_group,
-                    coin_group, air_group)
-        enemy_group.update()
-
-        screen.fill(pygame.Color(218, 187, 253))
+                    coin_group, air_group, coin_box_group
+                    )
+        coin_group.update(ground_group)
+        screen.fill("Black")
         ladder_group.draw(screen)
         water_group.draw(screen)
         air_group.draw(screen)
         hero_group.draw(screen)
-        let_group.draw(screen)
-        enemy_group.draw(screen)
+        ground_group.draw(screen)
+        coin_box_group.draw(screen)
+        coin_group.draw(screen)
 
         pygame.display.flip()
         clock.tick(FPS)
     pygame.quit()
 
 
-coin_box_group = pygame.sprite.Group()  # если монеты будут просто спасниться на земле то эта группа не нужна
+coin_box_group = pygame.sprite.Group()  # если монеты будут просто спавниться на земле то эта группа не нужна
 # это является и препятствием и отдельной группой
+ground_group = pygame.sprite.Group()
 coin_group = pygame.sprite.Group()
 all_sprites = pygame.sprite.Group()
 hero_group = pygame.sprite.Group()

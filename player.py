@@ -1,5 +1,6 @@
 import pygame
 import math
+from items import Coin
 
 JUMP_POWER = 10
 HERO_SPEED = 6
@@ -11,11 +12,13 @@ HERO_OXYGEN = 6
 
 
 class Hero(pygame.sprite.Sprite):
-    def __init__(self, pos_x, pos_y, tile_width, tile_height, image, *groups):
-        super().__init__(*groups)
+    def __init__(self, pos_x, pos_y, tile_width, tile_height, image, coin_im, coin_group, all_sprites, *groups):
+        super().__init__(groups)
         self.image = image
         self.rect = self.image.get_rect().move(tile_width * pos_x,
                                                tile_height * pos_y)
+        self.coin_im = coin_im
+        self.group = coin_group, all_sprites
 
         # статы
         self.vx = 0
@@ -40,7 +43,7 @@ class Hero(pygame.sprite.Sprite):
         self.coin_counter = 0
         # self.coin_im = coin_image
 
-    def collide(self, vx, vy, lets):
+    def collide(self, vx, vy, lets, coin_box_group):
         for tile in lets:
             if pygame.sprite.collide_rect(self, tile):
                 if vx > 0:
@@ -53,6 +56,11 @@ class Hero(pygame.sprite.Sprite):
                     self.vy = 0
 
                 if vy < 0:
+                    if self.other_collide(self, coin_box_group):
+                        sp = self.other_collide(self, coin_box_group, True)
+                        for i in sp:
+                            x, y = (i.rect.x // 70), (i.rect.y // 70) - 1
+                            Coin(x, y, 70, 70, self.coin_im, self.group)
                     self.rect.top = tile.rect.bottom
                     self.vy = 0
 
@@ -68,7 +76,7 @@ class Hero(pygame.sprite.Sprite):
         # статы будут создаваться отдельными холстами и накладываться на основной в верхнем левом углу
 
     def update(self, left, right, up, wat_up, wat_down, let_group, water_group, ladder_group, enemy_group,
-               coin_group, air_group):
+               coin_group, air_group, coin_box_group):
 
         self.visible_o2 = False
         self.reload_o2 = False
@@ -89,10 +97,10 @@ class Hero(pygame.sprite.Sprite):
             self.on_Ground = False
 
             self.rect.y += self.vy
-            self.collide(0, self.vy, let_group)
+            self.collide(0, self.vy, let_group, coin_box_group)
 
             self.rect.x += self.vx
-            self.collide(self.vx, 0, let_group)
+            self.collide(self.vx, 0, let_group, coin_box_group)
         elif self.other_collide(self, water_group):
             self.vy += (GRAVITY - TO_GRAVITY)
             if wat_up:
@@ -104,10 +112,10 @@ class Hero(pygame.sprite.Sprite):
             if not (left or right):
                 self.vx = 0
             self.rect.y += self.vy
-            self.collide(0, self.vy, let_group)
+            self.collide(0, self.vy, let_group, coin_box_group)
 
             self.rect.x += self.vx
-            self.collide(self.vx, 0, let_group)
+            self.collide(self.vx, 0, let_group, coin_box_group)
         elif self.other_collide(self, ladder_group):
             if wat_up:
                 self.vy = -HERO_SPEED
@@ -123,14 +131,14 @@ class Hero(pygame.sprite.Sprite):
                 self.vx = 0
 
             self.rect.y += self.vy
-            self.collide(0, self.vy, let_group)
+            self.collide(0, self.vy, let_group, coin_box_group)
 
             self.rect.x += self.vx
-            self.collide(self.vx, 0, let_group)
+            self.collide(self.vx, 0, let_group, coin_box_group)
 
         if self.other_collide(self, enemy_group):
             self.HP -= 1
-        if self.other_collide(self, coin_group):
+        if self.other_collide(self, coin_group, True):
             self.coin_counter += 1
         if self.other_collide(self, water_group):
             self.visible_o2 = True
