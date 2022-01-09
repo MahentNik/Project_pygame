@@ -20,8 +20,8 @@ class Coin(Items):
 
         self.gravity = gravity
 
-        num1 = range(-5, 6)
-        num2 = range(4, 5)
+        num1 = range(-3, 3)
+        num2 = range(-3, -1)
 
         self.vx = random.choice(num1)
         self.vy = random.choice(num2)

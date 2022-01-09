@@ -24,8 +24,8 @@ PRIMITIVE_LEVEL = [
     "-       c  w       l     -",
     "-      --- w       l     -",
     "-          w       l     -",
-    "-          w   -k- l     -",
-    "-w        www      l     -",
+    "--k-k-k-   w   -k- l     -",
+    "-                  l     -",
     "-                   -ww- -",
     "---------------------ww---",
     "-wwwww-  -wwwwwwwwwwwwwww-",
@@ -92,7 +92,7 @@ def main():
     hero_im = load_image('p1_stand.png')
     brick = load_image("brickWall.png")
     coin_box = load_image("boxCoin.png")
-    coin_im = load_image("coinGold.png")
+    coin_im = load_image("coinGold.png", -1)
 
     clock = pygame.time.Clock()
     hero, level_x, level_y = create_level(PRIMITIVE_LEVEL, hero_im, brick, coin_box, coin_im)
