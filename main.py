@@ -24,7 +24,7 @@ PRIMITIVE_LEVEL = [
     "-   @      w    s        -",
     "-          w ------l--   -",
     "-          w       l     -",
-    "-       c  w       l     -",
+    "-          w       l     -",
     "-      --- w       l     -",
     "-          w       l     -",
     "--k-k-k-   w   -k- l     -",
@@ -62,9 +62,6 @@ def create_level(name_level, images):
                 Ladder(x, y, tile_width, tile_height, images[4], ladder_group, all_sprites)
             elif name_level[y][x] == "k":
                 CoinBox(x, y, tile_width, tile_height, images[6], let_group, coin_box_group, air_group, all_sprites)
-            elif name_level[y][x] == "c":
-                Air(x, y, tile_width, tile_height, air_group, all_sprites)
-                Coin(x, y - 1, tile_width, tile_height, images[7], coin_group, all_sprites)
             elif name_level[y][x] == 's':
                 Air(x, y, tile_width, tile_height, air_group, all_sprites)
                 Snail(x, y, tile_width, tile_height, images[2], enemy_group, all_sprites)

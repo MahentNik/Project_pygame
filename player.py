@@ -59,8 +59,8 @@ class Hero(pygame.sprite.Sprite):
                     if self.other_collide(self, coin_box_group):
                         sp = self.other_collide(self, coin_box_group, True)
                         for i in sp:
-                            x, y = (i.rect.x // 70), (i.rect.y // 70) - 1
-                            Coin(x, y, 70, 70, self.coin_im, self.group)
+                            x, y = i.rect.x, i.rect.y
+                            Coin(x, y, self.coin_im, self.group)
                     self.rect.top = tile.rect.bottom
                     self.vy = 0
 

@@ -12,11 +12,11 @@ class Items(pygame.sprite.Sprite):
 
 
 class Coin(Items):
-    def __init__(self, x, y, tile_width, tile_height, coin_im, *groups):
+    def __init__(self, x, y, coin_im, *groups):
         super().__init__(groups)
         self.image = coin_im
-        self.rect = self.image.get_rect().move(tile_width * x,
-                                               tile_height * y)
+        self.rect = self.image.get_rect().move(x,
+                                               y - 70)
 
         self.gravity = gravity
 
