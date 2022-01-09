@@ -11,6 +11,9 @@ from hud import Hud
 # основные переменные
 WINDOW_SIZE = WIDTH, HEIGHT = 1600, 800
 FPS = 60
+RELOAD_HIT = pygame.USEREVENT + 76  # перезарядка получения урона
+RELOAD_o2 = pygame.USEREVENT + 77  # перезарядка получения кислорода
+RELOAD__o2 = pygame.USEREVENT + 78  # перезарядка отнимания кислорода
 
 tile_width = tile_height = 70
 PRIMITIVE_LEVEL = [
@@ -98,6 +101,9 @@ def main():
     up = False
     wat_up = False
     wat_down = False
+    may_get_damaged = True  # перезарядка получения урона
+    is_time_o2 = False  # перезарядка получения кислорода
+    is_time__o2 = False  # перезарядка отнимания кислорода
 
     running = True
     while running:
@@ -126,6 +132,18 @@ def main():
                     is_right = False
                 elif event.key == pygame.K_LEFT:
                     is_left = False
+            if event.type == RELOAD_HIT:
+                may_get_damaged = False
+            else:
+                may_get_damaged = True
+            if event.type == RELOAD_o2:
+                is_time_o2 = True
+            else:
+                is_time_o2 = False
+            if event.type == RELOAD__o2:
+                is_time__o2 = True
+            else:
+                is_time__o2 = False
         camera.update(hero)
 
         for sprite in all_sprites:
@@ -134,7 +152,7 @@ def main():
         hero.update(is_left, is_right, up, wat_up, wat_down, let_group, water_group, ladder_group, enemy_group,
                     coin_group, air_group
                     )
-        hud.update(water_group, enemy_group, coin_group, air_group)
+        hud.update(water_group, enemy_group, coin_group, air_group, may_get_damaged, is_time_o2, is_time__o2)
         screen.fill("Black")
         ladder_group.draw(screen)
         water_group.draw(screen)
