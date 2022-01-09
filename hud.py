@@ -5,8 +5,8 @@ HERO_HP = 3
 HERO_OXYGEN = 6
 
 RELOAD_HIT = pygame.USEREVENT + 76  # перезарядка получения урона
-RELOAD_02 = pygame.USEREVENT + 77  # перезарядка получения кислорода
-RELOAD__02 = pygame.USEREVENT + 78  # перезарядка отнимания кислорода
+RELOAD_o2 = pygame.USEREVENT + 77  # перезарядка получения кислорода
+RELOAD__o2 = pygame.USEREVENT + 78  # перезарядка отнимания кислорода
 
 
 class Hud(pygame.sprite.Sprite):
@@ -29,6 +29,8 @@ class Hud(pygame.sprite.Sprite):
         self.no_hp_im = no_hp_im
         self.visible_hp = True
 
+        self.firs_damage = False
+
         self.O2 = HERO_OXYGEN
         self.o2_im = o2_im
         self.visible_o2 = False
@@ -41,30 +43,46 @@ class Hud(pygame.sprite.Sprite):
     def collide(self, player, group, status=False):
         return pygame.sprite.spritecollide(player, group, status)
 
-    def update(self, water_group, enemy_group, coin_group, air_group, may_get_damaged, is_time_o2, is_time__o2):
+    def update(self, water_group, enemy_group, coin_group, air_group, may_get_damaged, first_damage,
+               is_time_o2, is_time__o2):
 
         self.visible_o2 = False
 
         if self.collide(self.hero, enemy_group):
-            if may_get_damaged:
+            if may_get_damaged or first_damage:
                 self.HP -= 1
+                self.firs_damage = False
                 pygame.time.set_timer(RELOAD_HIT, 1000)
         else:
             pygame.time.set_timer(RELOAD_HIT, 0)
+            self.first_damage = True
+            #  если сбрасывается соприкосновение с врагом, то нужно передать что первый дамаг должен восстановился)
+            self.reload_first_damage()
+
+        if self.O2 == 0:
+            pass
+            # если кислород кончится, то будет или смерть, или будкт отниматься по полхп
+
         if self.collide(self.hero, coin_group, True):
             self.coin_counter += 1
+
         if self.collide(self.hero, water_group):
+            pygame.time.set_timer(RELOAD__o2, 1000)
             self.visible_o2 = True
             if self.collide(self.hero, air_group):
-                pygame.time.set_timer(RELOAD__02, 0)
-                pygame.time.set_timer(RELOAD_02, 1000)
+                pygame.time.set_timer(RELOAD_o2, 1000)
                 if is_time_o2:
-                    self.O2 += 1
+                    pygame.time.set_timer(RELOAD__o2, 0)
+                    if self.O2 < HERO_OXYGEN:
+                        self.O2 += 1
             else:
-                pygame.time.set_timer(RELOAD_02, 0)
-                pygame.time.set_timer(RELOAD__02, 1000)
                 if is_time__o2:
-                    self.O2 -= 1
+                    pygame.time.set_timer(RELOAD_o2, 0)
+                    if self.O2 > 0:
+                        self.O2 -= 1
+        else:
+            pygame.time.set_timer(RELOAD__o2, 0)
+            pygame.time.set_timer(RELOAD_o2, 0)
 
         self.show_stats()
 
@@ -107,3 +125,6 @@ class Hud(pygame.sprite.Sprite):
 
         self.image = hud_screen
         self.rect = self.image.get_rect()
+
+    def reload_first_damage(self):
+        return self.first_damage

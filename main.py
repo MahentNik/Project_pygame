@@ -100,11 +100,15 @@ def main():
     hero, level_x, level_y = create_level(PRIMITIVE_LEVEL, hero_im, brick)
     camera = Camera((level_x, level_y), WIDTH, HEIGHT)
     hud = Hud(hero, 0, 0, no_hp_im, half_hp_im, hp_im, o2_im, coin_im, numbers, hud_group, all_sprites)
+
     is_left = is_right = False
     up = False
     wat_up = False
     wat_down = False
+
     may_get_damaged = True  # перезарядка получения урона
+    first_damage = True
+
     is_time_o2 = False  # перезарядка получения кислорода
     is_time__o2 = False  # перезарядка отнимания кислорода
 
@@ -136,9 +140,10 @@ def main():
                 elif event.key == pygame.K_LEFT:
                     is_left = False
             if event.type == RELOAD_HIT:
-                may_get_damaged = False
-            else:
                 may_get_damaged = True
+                first_damage = False
+            else:
+                may_get_damaged = False
             if event.type == RELOAD_o2:
                 is_time_o2 = True
             else:
@@ -155,7 +160,8 @@ def main():
         hero.update(is_left, is_right, up, wat_up, wat_down, let_group, water_group, ladder_group, enemy_group,
                     coin_group, air_group
                     )
-        hud.update(water_group, enemy_group, coin_group, air_group, may_get_damaged, is_time_o2, is_time__o2)
+        hud.update(water_group, enemy_group, coin_group, air_group, may_get_damaged, first_damage,
+                   is_time_o2, is_time__o2)
         screen.fill("Black")
         ladder_group.draw(screen)
         water_group.draw(screen)
@@ -163,6 +169,8 @@ def main():
         hero_group.draw(screen)
         let_group.draw(screen)
         hud_group.draw(screen)
+        if hud.reload_first_damage():
+            first_damage = True
 
         pygame.display.flip()
         clock.tick(FPS)
