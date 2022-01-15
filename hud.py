@@ -5,8 +5,11 @@ HERO_HP = 3
 HERO_OXYGEN = 6
 
 RELOAD_HIT = pygame.USEREVENT + 76  # перезарядка получения урона
+COOLDOWN_DAMAGE = 1000
 RELOAD_o2 = pygame.USEREVENT + 77  # перезарядка получения кислорода
+COOLDOWN_O2 = 1000
 RELOAD__o2 = pygame.USEREVENT + 78  # перезарядка отнимания кислорода
+COOLDOWN__O2 = 2000
 
 
 class Hud(pygame.sprite.Sprite):
@@ -38,6 +41,10 @@ class Hud(pygame.sprite.Sprite):
         # цифры
         self.numbers = numbers
 
+        self.timer_o2 = False
+        self.timer__o2 = False
+        self.timer_hp = False
+
         self.show_stats()
 
     def collide(self, player, group, status=False):
@@ -52,37 +59,48 @@ class Hud(pygame.sprite.Sprite):
             if may_get_damaged or first_damage:
                 self.HP -= 1
                 self.firs_damage = False
-                pygame.time.set_timer(RELOAD_HIT, 1000)
+                if not self.timer_hp:
+                    pygame.time.set_timer(RELOAD_HIT, COOLDOWN_DAMAGE)
+                    self.timer_hp = True
         else:
+            self.timer_hp = False
             pygame.time.set_timer(RELOAD_HIT, 0)
             self.first_damage = True
             #  если сбрасывается соприкосновение с врагом, то нужно передать что первый дамаг должен восстановился)
             self.reload_first_damage()
 
         if self.O2 == 0:
-            pass
+            self.hero.kill()
             # если кислород кончится, то будет или смерть, или будкт отниматься по полхп
 
         if self.collide(self.hero, coin_group, True):
             self.coin_counter += 1
 
         if self.collide(self.hero, water_group):
-            pygame.time.set_timer(RELOAD__o2, 1000)
             self.visible_o2 = True
+            if not self.timer__o2:
+                pygame.time.set_timer(RELOAD__o2, COOLDOWN__O2)
+                self.timer__o2 = True
             if self.collide(self.hero, air_group):
-                pygame.time.set_timer(RELOAD_o2, 1000)
+                if not self.timer_o2:
+                    pygame.time.set_timer(RELOAD_o2, COOLDOWN_O2)
+                    self.timer_o2 = True
                 if is_time_o2:
                     pygame.time.set_timer(RELOAD__o2, 0)
+                    self.timer__o2 = False
                     if self.O2 < HERO_OXYGEN:
                         self.O2 += 1
             else:
                 if is_time__o2:
                     pygame.time.set_timer(RELOAD_o2, 0)
+                    self.timer_o2 = False
                     if self.O2 > 0:
                         self.O2 -= 1
         else:
             pygame.time.set_timer(RELOAD__o2, 0)
             pygame.time.set_timer(RELOAD_o2, 0)
+            self.timer__o2 = False
+            self.timer_o2 = False
 
         self.show_stats()
 

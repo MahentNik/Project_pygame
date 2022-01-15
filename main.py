@@ -29,7 +29,7 @@ PRIMITIVE_LEVEL = [
     "-          w   --- l     -",
     "-w        www      l     -",
     "-                   -ww- -",
-    "---------------------ww---",
+    "------ww-------------ww---",
     "-wwwww-  -wwwwwwwwwwwwwww-",
     "-wwwwwwwwwwwwwwwwwwwwwwww-",
     "-wwwwwwwwwwwwwwwwwwwwwwww-",
@@ -106,14 +106,17 @@ def main():
     wat_up = False
     wat_down = False
 
-    may_get_damaged = True  # перезарядка получения урона
-    first_damage = True
-
-    is_time_o2 = False  # перезарядка получения кислорода
-    is_time__o2 = False  # перезарядка отнимания кислорода
-
     running = True
     while running:
+        may_get_damaged = True  # перезарядка получения урона
+        first_damage = True
+
+        timer_off_hp = False
+        timer_off_o2 = False
+        timer_off__o2 = False
+
+        is_time_o2 = False  # перезарядка получения кислорода
+        is_time__o2 = False  # перезарядка отнимания кислорода
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -142,16 +145,10 @@ def main():
             if event.type == RELOAD_HIT:
                 may_get_damaged = True
                 first_damage = False
-            else:
-                may_get_damaged = False
             if event.type == RELOAD_o2:
                 is_time_o2 = True
-            else:
-                is_time_o2 = False
             if event.type == RELOAD__o2:
                 is_time__o2 = True
-            else:
-                is_time__o2 = False
         camera.update(hero)
 
         for sprite in all_sprites:
