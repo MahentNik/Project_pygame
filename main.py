@@ -12,6 +12,7 @@ from camera import Camera
 from hud import Hud
 from coin_box import CoinBox
 from items import Coin
+from spike import Spike
 
 # основные переменные
 WINDOW_SIZE = WIDTH, HEIGHT = 1600, 800
@@ -31,7 +32,7 @@ PRIMITIVE_LEVEL = [
     "-          w       l     -",
     "-          w       l     -",
     "-      --- w       l    k-",
-    "-          w       l    k-",
+    "- dd       w       l    k-",
     "--k-k-k-   w   -k- l     -",
     "-                  l     -",
     "-              s    -ww- -",
@@ -73,6 +74,8 @@ def create_level(name_level, images):
             elif name_level[y][x] == 'f':
                 Water(x, y, tile_width, tile_height, images[5], water_group, all_sprites)
                 Fish(x, y, tile_width, tile_height, images[3], enemy_group, all_sprites)
+            elif name_level[y][x] == 'd':
+                Spike(x, y, tile_width, tile_height, all_sprites)
     return hero, x, y
 
 
