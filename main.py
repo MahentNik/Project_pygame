@@ -115,9 +115,9 @@ def main():
         "hud_3.png"), load_image("hud_4.png"), load_image("hud_5.png"), load_image("hud_6.png"), load_image(
         "hud_7.png"), load_image("hud_8.png"), load_image("hud_9.png")
 
-
-clock = pygame.time.Clock()
-    hero, level_x, level_y = create_level(PRIMITIVE_LEVEL, hero_im, brick)
+    clock = pygame.time.Clock()
+    hero, level_x, level_y = create_level(PRIMITIVE_LEVEL, images)
+    hud = Hud(hero, 0, 0, no_hp_im, half_hp_im, hp_im, o2_im, coin_im, numbers, hud_group, all_sprites)
     camera = Camera((level_x, level_y), WIDTH, HEIGHT)
     is_left = is_right = False
     up = False
@@ -174,26 +174,26 @@ clock = pygame.time.Clock()
         for sprite in all_sprites:
             camera.apply(sprite)
 
-            hero.update(is_left, is_right, up, wat_up, wat_down, let_group, water_group, ladder_group, enemy_group,
-                        coin_group, air_group, coin_box_group)
-            hud.update(water_group, enemy_group, coin_group, air_group, may_get_damaged, first_damage,
-                       is_time_o2, is_time__o2)
+        hero.update(is_left, is_right, up, wat_up, wat_down, let_group, water_group, ladder_group, enemy_group,
+                    coin_group, air_group, coin_box_group)
+        hud.update(water_group, enemy_group, coin_group, air_group, may_get_damaged, first_damage,
+                   is_time_o2, is_time__o2)
 
-            enemy_group.update()
-            coin_group.update(ground_group)
-            screen.fill((218, 187, 253))
-            ladder_group.draw(screen)
-            water_group.draw(screen)
-            air_group.draw(screen)
-            hero_group.draw(screen)
-            ground_group.draw(screen)
-            coin_box_group.draw(screen)
-            coin_group.draw(screen)
-            enemy_group.draw(screen)
+        enemy_group.update()
+        coin_group.update(ground_group)
+        screen.fill((218, 187, 253))
+        ladder_group.draw(screen)
+        water_group.draw(screen)
+        air_group.draw(screen)
+        hero_group.draw(screen)
+        ground_group.draw(screen)
+        coin_box_group.draw(screen)
+        coin_group.draw(screen)
+        enemy_group.draw(screen)
 
-            pygame.display.flip()
-            clock.tick(FPS)
-        pygame.quit()
+        pygame.display.flip()
+        clock.tick(FPS)
+    pygame.quit()
 
 
 coin_box_group = pygame.sprite.Group()  # если монеты будут просто спавниться на земле то эта группа не нужна
