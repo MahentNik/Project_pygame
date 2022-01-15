@@ -17,17 +17,22 @@ class Snail(pygame.sprite.Sprite):
                                                tile_height * pos_y + 39)
 
     def update(self):
+        self.cur_frame = (self.cur_frame + 1) % len(self.frames)
+        self.image = self.frames[self.cur_frame]
+
         if (self.moves // 70) % 2 == 0:
             self.flag = True
+            self.image = self.image
         else:
             self.flag = False
+            self.image = self.mirror_image
 
         if self.flag:
-            self.image = self.not_mirrored_image
+            #self.image = self.not_mirrored_image
             self.rect = self.rect.move(-self.snail_speed, 0)
             self.moves += 1
         else:
-            self.image = self.mirror_image
+            #self.image = self.mirror_image
             self.rect = self.rect.move(self.snail_speed, 0)
             self.moves += 1
 

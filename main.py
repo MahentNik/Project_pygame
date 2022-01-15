@@ -95,7 +95,7 @@ def main():
     wat_down = False
 
     snail_event = pygame.USEREVENT + 1
-    pygame.time.set_timer(snail_event, 20)
+    pygame.time.set_timer(snail_event, 30)
 
     running = True
     while running:
@@ -125,8 +125,7 @@ def main():
                 elif event.key == pygame.K_LEFT:
                     is_left = False
             if event.type == snail_event:
-                snail.frame_change()
-                print(1)
+                enemy_group.update()
 
         camera.update(hero)
 
@@ -135,7 +134,7 @@ def main():
 
         hero.update(is_left, is_right, up, wat_up, wat_down, let_group, water_group, ladder_group, enemy_group,
                     coin_group, air_group)
-        enemy_group.update()
+        # enemy_group.update()
 
         screen.fill(pygame.Color(218, 187, 253))
         ladder_group.draw(screen)
