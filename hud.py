@@ -1,7 +1,7 @@
 import pygame
 
 HUD_SIZE = (HUD_WIDTH, HUD_HEIGHT) = (300, 150)
-HERO_HP = 3
+HERO_HP = 5
 HERO_OXYGEN = 6
 
 RELOAD_HIT = pygame.USEREVENT + 76  # перезарядка получения урона
@@ -41,33 +41,31 @@ class Hud(pygame.sprite.Sprite):
         # цифры
         self.numbers = numbers
 
+        self.firs_damage = True
+        self.timer_hp = False
         self.timer_o2 = False
         self.timer__o2 = False
-        self.timer_hp = False
 
         self.show_stats()
 
     def collide(self, player, group, status=False):
         return pygame.sprite.spritecollide(player, group, status)
 
-    def update(self, water_group, enemy_group, coin_group, air_group, may_get_damaged, first_damage,
-               is_time_o2, is_time__o2):
+    def update(self, water_group, enemy_group, coin_group, air_group, may_get_damaged, is_time_o2, is_time__o2):
 
         self.visible_o2 = False
 
         if self.collide(self.hero, enemy_group):
-            if may_get_damaged or first_damage:
+            if may_get_damaged or self.firs_damage:
                 self.HP -= 1
                 self.firs_damage = False
                 if not self.timer_hp:
-                    pygame.time.set_timer(RELOAD_HIT, COOLDOWN_DAMAGE)
+                    pygame.time.set_timer(RELOAD_HIT, 1000)
                     self.timer_hp = True
         else:
-            self.timer_hp = False
             pygame.time.set_timer(RELOAD_HIT, 0)
-            self.first_damage = True
-            #  если сбрасывается соприкосновение с врагом, то нужно передать что первый дамаг должен восстановился)
-            self.reload_first_damage()
+            self.timer_hp = False
+            self.firs_damage = True
 
         if self.O2 == 0:
             self.hero.kill()
@@ -107,8 +105,7 @@ class Hud(pygame.sprite.Sprite):
     def show_stats(self):
         change_pos = 50
         hp = self.HP
-        coins = self.coin_counter
-        coins = str(coins).split()
+        coins = str(self.coin_counter)
 
         photo_0, photo_1, photo_2, photo_3, photo_4, photo_5, photo_6, photo_7, photo_8, photo_9 = self.numbers
 
@@ -133,16 +130,13 @@ class Hud(pygame.sprite.Sprite):
                 pos_x += change_pos
 
         pos_x = 0
-        hud_screen.blit(self.coin_im, (pos_x, 100))
+        hud_screen.blit(self.coin_im, (pos_x, 90))
         pos_x += change_pos * 1.5
         change_pos = 32
-        for i in coins:
-            name_photo = eval("photo_" + i)
+        for i in range(len(coins)):
+            name_photo = eval("photo_" + coins[i])
             hud_screen.blit(name_photo, (pos_x, 106))
             pos_x += change_pos
 
         self.image = hud_screen
         self.rect = self.image.get_rect()
-
-    def reload_first_damage(self):
-        return self.first_damage

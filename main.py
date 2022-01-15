@@ -23,15 +23,15 @@ REPEAT_MUSIC = pygame.USEREVENT + 1
 
 tile_width = tile_height = 70
 PRIMITIVE_LEVEL = [
-    "--------------------------",
-    "-          w             -",
-    "-          w             -",
+    "------------------   -----",
+    "-          w      kkk    -",
+    "-          w      kkk    -",
     "-   @      w    s        -",
-    "-          w ------l--   -",
+    "-      kkk w -----lll-   -",
     "-          w       l     -",
     "-          w       l     -",
-    "-      --- w       l     -",
-    "-          w       l     -",
+    "-      --- w       l    k-",
+    "-          w       l    k-",
     "--k-k-k-   w   -k- l     -",
     "-                  l     -",
     "-              s    -ww- -",
@@ -41,29 +41,12 @@ PRIMITIVE_LEVEL = [
     "-wwwwfwwwwwwwwwwwwwwwwwww-",
     "-wwwwwwwwwwwwwwwwwwwwwwww-",
     "-wwwwwwwww---wwwwwwwwwwww-",
-    "-wwwwwwwww- -wwwwwfwwwwww- ",
+    "-wwwwwwwww- -wwwwwfwwwwww-",
     "-wwwwwwwwwwwwwwwwwwwwwwww-",
     "-wwwwwwwwfwwwwwwwwwwwwwww-",
     "-wwwwwwwwwwwwwwwwwwwwwwww-",
     "--------------------------",
 ]
-
-
-def load_image(name, color_key=None):
-    fullname = os.path.join('data', name)
-    try:
-        image = pygame.image.load(fullname).convert()
-    except pygame.error as message:
-        print('Cannot load image:', name)
-        raise SystemExit(message)
-
-    if color_key is not None:
-        if color_key == -1:
-            color_key = image.get_at((0, 0))
-        image.set_colorkey(color_key)
-    else:
-        image = image.convert_alpha()
-    return image
 
 
 def create_level(name_level, images):
@@ -75,7 +58,8 @@ def create_level(name_level, images):
                 Ground(x, y, tile_width, tile_height, images[1], let_group, ground_group, all_sprites)
             elif name_level[y][x] == '@':
                 Air(x, y, tile_width, tile_height, air_group, all_sprites)
-                hero = Hero(x, y, tile_width, tile_height, images[0], images[7], coin_group, all_sprites,
+                hero = Hero(x, y, tile_width, tile_height, images[0], images[7], coin_group, coin_box_group,
+                            all_sprites,
                             hero_group, all_sprites)
             elif name_level[y][x] == 'w':
                 Water(x, y, tile_width, tile_height, images[5], water_group, all_sprites)
@@ -126,15 +110,10 @@ def main():
 
     running = True
     while running:
-        may_get_damaged = True  # перезарядка получения урона
-        first_damage = True
-
-        timer_off_hp = False
-        timer_off_o2 = False
-        timer_off__o2 = False
-
+        may_get_damaged = False  # перезарядка получения урона
         is_time_o2 = False  # перезарядка получения кислорода
         is_time__o2 = False  # перезарядка отнимания кислорода
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -164,7 +143,6 @@ def main():
                     is_left = False
             if event.type == RELOAD_HIT:
                 may_get_damaged = True
-                first_damage = False
             if event.type == RELOAD_o2:
                 is_time_o2 = True
             if event.type == RELOAD__o2:
@@ -176,7 +154,7 @@ def main():
 
         hero.update(is_left, is_right, up, wat_up, wat_down, let_group, water_group, ladder_group, enemy_group,
                     coin_group, air_group, coin_box_group)
-        hud.update(water_group, enemy_group, coin_group, air_group, may_get_damaged, first_damage,
+        hud.update(water_group, enemy_group, coin_group, air_group, may_get_damaged,
                    is_time_o2, is_time__o2)
 
         enemy_group.update()
@@ -190,6 +168,7 @@ def main():
         coin_box_group.draw(screen)
         coin_group.draw(screen)
         enemy_group.draw(screen)
+        hud_group.draw(screen)
 
         pygame.display.flip()
         clock.tick(FPS)
