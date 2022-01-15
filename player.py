@@ -1,5 +1,6 @@
 import pygame
 import math
+from items import Coin
 
 JUMP_POWER = 10
 HERO_SPEED = 6
@@ -11,34 +12,22 @@ HERO_OXYGEN = 6
 
 
 class Hero(pygame.sprite.Sprite):
-    def __init__(self, pos_x, pos_y, tile_width, tile_height, image, *groups):
-        super().__init__(*groups)
+    def __init__(self, pos_x, pos_y, tile_width, tile_height, image, coin_im, coin_group, coin_box_group, all_sprites,
+                 *groups):
+        super().__init__(groups)
         self.image = image
         self.rect = self.image.get_rect().move(tile_width * pos_x,
                                                tile_height * pos_y)
+
+        self.group = [coin_group, all_sprites]
+        self.coin_im = coin_im
+        self.coin_box_group = coin_box_group
+        self.coin_group = coin_group
 
         # статы
         self.vx = 0
         self.vy = 0
         self.on_Ground = False
-
-        self.HP = HERO_HP
-        # self.HP_im = hp_image
-        # self.halfHP_im = halfhp_image
-        self.visible_hp = True
-        self.O2 = HERO_OXYGEN
-        # self.o2_im = o2_image
-        self.visible_o2 = False
-        self.reload_o2 = False
-
-        self.special_items = {
-            1: False,
-            2: False,
-            3: False
-        }
-
-        self.coin_counter = 0
-        # self.coin_im = coin_image
 
     def collide(self, vx, vy, lets):
         for tile in lets:
@@ -53,26 +42,19 @@ class Hero(pygame.sprite.Sprite):
                     self.vy = 0
 
                 if vy < 0:
+                    if self.other_collide(self, self.coin_box_group):
+                        sp = self.other_collide(self, self.coin_box_group, True)
+                        for i in sp:
+                            x, y = i.rect.x, i.rect.y
+                            Coin(x, y, self.coin_im, self.group)
                     self.rect.top = tile.rect.bottom
                     self.vy = 0
 
     def other_collide(self, player, group, status=False):
         return pygame.sprite.spritecollide(player, group, status)
 
-    def show_stats(self):
-        # show_HP
-        # show-coins
-        if self.visible_o2:
-            # show_o2
-            pass
-        # статы будут создаваться отдельными холстами и накладываться на основной в верхнем левом углу
-
     def update(self, left, right, up, wat_up, wat_down, let_group, water_group, ladder_group, enemy_group,
-               coin_group, air_group):
-
-        self.visible_o2 = False
-        self.reload_o2 = False
-
+               coin_group, air_group, coin_box_group):
         if not self.other_collide(self, water_group) and not self.other_collide(self, ladder_group):
             if up:
                 if self.on_Ground:
@@ -127,16 +109,6 @@ class Hero(pygame.sprite.Sprite):
 
             self.rect.x += self.vx
             self.collide(self.vx, 0, let_group)
-
-        if self.other_collide(self, enemy_group):
-            self.HP -= 1
-        if self.other_collide(self, coin_group):
-            self.coin_counter += 1
-        if self.other_collide(self, water_group):
-            self.visible_o2 = True
-            if self.other_collide(self, air_group):
-                self.reload_o2 = True
-        self.show_stats()
 
         """if collide(self, let_group):
             if self.vx < 0:

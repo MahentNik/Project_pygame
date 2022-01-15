@@ -28,11 +28,11 @@ class Snail(pygame.sprite.Sprite):
             self.image = self.mirror_image
 
         if self.flag:
-            #self.image = self.not_mirrored_image
+            # self.image = self.not_mirrored_image
             self.rect = self.rect.move(-self.snail_speed, 0)
             self.moves += 1
         else:
-            #self.image = self.mirror_image
+            # self.image = self.mirror_image
             self.rect = self.rect.move(self.snail_speed, 0)
             self.moves += 1
 
