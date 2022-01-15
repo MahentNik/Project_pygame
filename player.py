@@ -1,19 +1,20 @@
 import pygame
 import math
+from items import Coin
 
 JUMP_POWER = 10
 HERO_SPEED = 6
 GRAVITY = 0.35
 WATER_RESISTANCE = TO_GRAVITY, TO_SPEED = (0.3, 4.5)  # сопротивление движения в воде
-
-
 # потом следует вычислять эти параметры в процентах (пока так)
+HERO_HP = 3
+HERO_OXYGEN = 6
 
 
 class Hero(pygame.sprite.Sprite):
-    def __init__(self, pos_x, pos_y, tile_width, tile_height, hero_im, *groups):
+    def __init__(self, pos_x, pos_y, tile_width, tile_height, image, coin_im, coin_group, all_sprites, *groups):
         super().__init__(groups)
-        self.image = hero_im
+        self.image = image
         self.rect = self.image.get_rect().move(tile_width * pos_x,
                                                tile_height * pos_y)
 
@@ -22,12 +23,23 @@ class Hero(pygame.sprite.Sprite):
         self.vy = 0
         self.on_Ground = False
 
+        self.HP = HERO_HP
+        # self.HP_im = hp_image
+        # self.halfHP_im = halfhp_image
+        self.visible_hp = True
+        self.O2 = HERO_OXYGEN
+        # self.o2_im = o2_image
+        self.visible_o2 = False
+        self.reload_o2 = False
+
         self.special_items = {  # (1 показатель - найден предмет или нет) (2 показатель - активирован или нет)
             # (3 показатель - откатился ли == готов к использованию)
             1: [False, False, False],
             2: [False, False, False],
             3: [False, False, False]
         }
+        self.coin_counter = 0
+        # self.coin_im = coin_image
 
     def collide(self, vx, vy, lets):
         for tile in lets:
@@ -42,14 +54,31 @@ class Hero(pygame.sprite.Sprite):
                     self.vy = 0
 
                 if vy < 0:
+                    if self.other_collide(self, coin_box_group):
+                        sp = self.other_collide(self, coin_box_group, True)
+                        for i in sp:
+                            x, y = i.rect.x, i.rect.y
+                            Coin(x, y, self.coin_im, self.group)
                     self.rect.top = tile.rect.bottom
                     self.vy = 0
 
     def other_collide(self, player, group, status=False):
         return pygame.sprite.spritecollide(player, group, status)
 
+    def show_stats(self):
+        # show_HP
+        # show-coins
+        if self.visible_o2:
+            # show_o2
+            pass
+        # статы будут создаваться отдельными холстами и накладываться на основной в верхнем левом углу
+
     def update(self, left, right, up, wat_up, wat_down, let_group, water_group, ladder_group, enemy_group,
-               coin_group, air_group):
+               coin_group, air_group, coin_box_group):
+
+        self.visible_o2 = False
+        self.reload_o2 = False
+
         if not self.other_collide(self, water_group) and not self.other_collide(self, ladder_group):
             if up:
                 if self.on_Ground:
