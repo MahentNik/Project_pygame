@@ -85,7 +85,7 @@ def get_images():
     coin_im = load_image("coinGold.png", -1)
     images = [hero_im, brick, snail_image, fish_image, ladder_image, water_image, coin_box, coin_im]
     for_hud = [load_image("no_hp.png", -1), load_image("half_hp.png", -1), load_image("hp.png", -1),
-               load_image("o2.png")]
+               load_image("o2.png"), coin_im]
     numbers = load_image("hud_0.png"), load_image("hud_1.png"), load_image("hud_2.png"), load_image(
         "hud_3.png"), load_image("hud_4.png"), load_image("hud_5.png"), load_image("hud_6.png"), load_image(
         "hud_7.png"), load_image("hud_8.png"), load_image("hud_9.png")
