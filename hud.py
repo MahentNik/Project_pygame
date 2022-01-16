@@ -48,14 +48,12 @@ class Hud(pygame.sprite.Sprite):
 
         self.show_stats()
 
-    def collide(self, player, group, status=False):
-        return pygame.sprite.spritecollide(player, group, status)
-
-    def update(self, water_group, enemy_group, coin_group, air_group, may_get_damaged, is_time_o2, is_time__o2):
+    def update(self, water_group, enemy_group, coin_group, air_group, spikes_group,
+               may_get_damaged, is_time_o2, is_time__o2):
 
         self.visible_o2 = False
 
-        if self.collide(self.hero, enemy_group):
+        if collide(self.hero, enemy_group) or collide(self.hero, spikes_group):
             if may_get_damaged or self.firs_damage:
                 self.HP -= 1
                 self.firs_damage = False
@@ -71,15 +69,15 @@ class Hud(pygame.sprite.Sprite):
             self.hero.kill()
             # если кислород кончится, то будет или смерть, или будкт отниматься по полхп
 
-        if self.collide(self.hero, coin_group, True):
+        if collide(self.hero, coin_group, True):
             self.coin_counter += 1
 
-        if self.collide(self.hero, water_group):
+        if collide(self.hero, water_group):
             self.visible_o2 = True
             if not self.timer__o2:
                 pygame.time.set_timer(RELOAD__o2, COOLDOWN__O2)
                 self.timer__o2 = True
-            if self.collide(self.hero, air_group):
+            if collide(self.hero, air_group):
                 if not self.timer_o2:
                     pygame.time.set_timer(RELOAD_o2, COOLDOWN_O2)
                     self.timer_o2 = True
@@ -99,6 +97,7 @@ class Hud(pygame.sprite.Sprite):
             pygame.time.set_timer(RELOAD_o2, 0)
             self.timer__o2 = False
             self.timer_o2 = False
+
 
         self.show_stats()
 
@@ -141,3 +140,7 @@ class Hud(pygame.sprite.Sprite):
 
         self.image = hud_screen
         self.rect = self.image.get_rect()
+
+
+def collide(player, group, status=False):
+    return pygame.sprite.spritecollide(player, group, status)

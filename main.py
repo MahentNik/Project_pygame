@@ -70,7 +70,8 @@ def create_level(name_level, images):
                 Water(x, y, tile_width, tile_height, images[5], water_group, all_sprites)
                 Fish(x, y, tile_width, tile_height, images[3], enemy_group, all_sprites)
             elif name_level[y][x] == 'd':
-                Spike(x, y, tile_width, tile_height, spikes_group, all_sprites)
+                #Air(x, y, tile_width, tile_height, air_group, all_sprites)
+                Spike(x, y, tile_width, tile_height, images[8], spikes_group, all_sprites)
     return hero, x, y
 
 
@@ -83,12 +84,13 @@ def get_images():
     water_image = load_image('liquidWater.png')
     coin_box = load_image("boxCoin.png", -1)
     coin_im = load_image("coinGold.png", -1)
-    images = [hero_im, brick, snail_image, fish_image, ladder_image, water_image, coin_box, coin_im]
+    spike_im = load_image('spikes.png', -1)
+    images = [hero_im, brick, snail_image, fish_image, ladder_image, water_image, coin_box, coin_im, spike_im]
     for_hud = [load_image("no_hp.png", -1), load_image("half_hp.png", -1), load_image("hp.png", -1),
                load_image("o2.png"), coin_im]
-    numbers = load_image("hud_0.png"), load_image("hud_1.png"), load_image("hud_2.png"), load_image(
-        "hud_3.png"), load_image("hud_4.png"), load_image("hud_5.png"), load_image("hud_6.png"), load_image(
-        "hud_7.png"), load_image("hud_8.png"), load_image("hud_9.png")
+    numbers = load_image("hud_0.png", -1), load_image("hud_1.png", -1), load_image("hud_2.png", -1), load_image(
+        "hud_3.png", -1), load_image("hud_4.png", -1), load_image("hud_5.png", -1), load_image("hud_6.png", -1), \
+        load_image("hud_7.png", -1), load_image("hud_8.png", -1), load_image("hud_9.png", -1)
     return images, for_hud, numbers
 
 
@@ -155,7 +157,7 @@ def main():
 
         hero.update(is_left, is_right, up, wat_up, wat_down, let_group, water_group, ladder_group, enemy_group,
                     coin_group, air_group, coin_box_group)
-        hud.update(water_group, enemy_group, coin_group, air_group, may_get_damaged,
+        hud.update(water_group, enemy_group, coin_group, air_group, spikes_group, may_get_damaged,
                    is_time_o2, is_time__o2)
 
         enemy_group.update()
