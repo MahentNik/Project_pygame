@@ -98,45 +98,53 @@ class Hud(pygame.sprite.Sprite):
             self.timer__o2 = False
             self.timer_o2 = False
 
-
         self.show_stats()
 
-    def show_stats(self):
+    def show_hp(self, screen):
+        pos_x = 0
         change_pos = 50
         hp = self.HP
-        coins = str(self.coin_counter)
-
-        photo_0, photo_1, photo_2, photo_3, photo_4, photo_5, photo_6, photo_7, photo_8, photo_9 = self.numbers
-
-        hud_screen = pygame.Surface((300, 150))
-        hud_screen.fill((218, 187, 253))
-
-        pos_x = 0
         for i in range(HERO_HP):
             if hp >= 1:
                 hp -= 1
-                hud_screen.blit(self.HP_im, (pos_x, 0))
+                screen.blit(self.HP_im, (pos_x, 0))
             elif hp <= 0:
-                hud_screen.blit(self.no_hp_im, (pos_x, 0))
+                screen.blit(self.no_hp_im, (pos_x, 0))
             elif 0 < hp < 1:
                 hp -= 0.5
-                hud_screen.blit(self.halfHP_im, (pos_x, 0))
+                screen.blit(self.halfHP_im, (pos_x, 0))
             pos_x += change_pos
 
-        if self.visible_o2:
-            pos_x = 0
-            for _ in range(self.O2):
-                hud_screen.blit(self.o2_im, (pos_x, 50))
-                pos_x += change_pos
+    def show_coins(self, screen):
+        coins = str(self.coin_counter)
 
         pos_x = 0
-        hud_screen.blit(self.coin_im, (pos_x, 90))
-        pos_x += change_pos * 1.5
+        screen.blit(self.coin_im, (pos_x, 50))
+
         change_pos = 32
+        pos_x += change_pos * 1.5
+
         for i in range(len(coins)):
             name_photo = eval("photo_" + coins[i])
-            hud_screen.blit(name_photo, (pos_x, 106))
+            screen.blit(name_photo, (pos_x, 46))
             pos_x += change_pos
+
+    def show_oxygen(self, screen):
+        pos_x = 0
+        change_pos = 50
+
+        for _ in range(self.O2):
+            screen.blit(self.o2_im, (pos_x, 90))
+            pos_x += change_pos
+
+    def show_stats(self):
+        hud_screen = pygame.Surface((300, 150))
+        hud_screen.fill((218, 187, 253))
+
+        self.show_hp(hud_screen)
+        self.show_coins(hud_screen)
+        if self.visible_o2:
+            self.show_oxygen(hud_screen)
 
         self.image = hud_screen
         self.rect = self.image.get_rect()

@@ -82,7 +82,7 @@ def get_images():
     ladder_image = load_image('ladder_mid.png', -2)
     water_image = load_image('liquidWater.png')
     coin_box = load_image("boxCoin.png", -1)
-    coin_im = load_image("coinGold.png", -1)
+    coin_im = load_image("coinGold1.png", -1)
     spike_im = load_image('spikes.png', -1)
     images = [hero_im, brick, snail_image, fish_image, ladder_image, water_image, coin_box, coin_im, spike_im]
     for_hud = [load_image("no_hp.png", -1), load_image("half_hp.png", -1), load_image("hp.png", -1),
