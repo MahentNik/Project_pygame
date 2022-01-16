@@ -1,7 +1,7 @@
 import pygame
 
 HUD_SIZE = (HUD_WIDTH, HUD_HEIGHT) = (300, 150)
-HERO_HP = 5
+HERO_HP = 6
 HERO_OXYGEN = 6
 
 RELOAD_HIT = pygame.USEREVENT + 76  # перезарядка получения урона
@@ -123,10 +123,11 @@ class Hud(pygame.sprite.Sprite):
 
         change_pos = 32
         pos_x += change_pos * 1.5
+        photo_0, photo_1, photo_2, photo_3, photo_4, photo_5, photo_6, photo_7, photo_8, photo_9 = self.numbers
 
         for i in range(len(coins)):
             name_photo = eval("photo_" + coins[i])
-            screen.blit(name_photo, (pos_x, 46))
+            screen.blit(name_photo, (pos_x, 50))
             pos_x += change_pos
 
     def show_oxygen(self, screen):
@@ -138,7 +139,7 @@ class Hud(pygame.sprite.Sprite):
             pos_x += change_pos
 
     def show_stats(self):
-        hud_screen = pygame.Surface((300, 150))
+        hud_screen = pygame.Surface((300, 140))
         hud_screen.fill((218, 187, 253))
 
         self.show_hp(hud_screen)
