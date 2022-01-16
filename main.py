@@ -4,15 +4,11 @@ from load_image import load_image
 from snail import Snail
 from fish import Fish
 from player import Hero
-from air import Air
-from ground import Ground
-from water import Water
-from ladder import Ladder
 from camera import Camera
 from hud import Hud
-from coin_box import CoinBox
 from items import Coin
 from spike import Spike
+from tiles import *
 
 # основные переменные
 WINDOW_SIZE = WIDTH, HEIGHT = 1600, 800
@@ -60,8 +56,7 @@ def create_level(name_level, images):
             elif name_level[y][x] == '@':
                 Air(x, y, tile_width, tile_height, air_group, all_sprites)
                 hero = Hero(x, y, tile_width, tile_height, images[0], images[7], coin_group, coin_box_group,
-                            all_sprites,
-                            hero_group, all_sprites)
+                            all_sprites, hero_group, all_sprites)
             elif name_level[y][x] == 'w':
                 Water(x, y, tile_width, tile_height, images[5], water_group, all_sprites)
             elif name_level[y][x] == 'l':
@@ -75,7 +70,7 @@ def create_level(name_level, images):
                 Water(x, y, tile_width, tile_height, images[5], water_group, all_sprites)
                 Fish(x, y, tile_width, tile_height, images[3], enemy_group, all_sprites)
             elif name_level[y][x] == 'd':
-                Spike(x, y, tile_width, tile_height, all_sprites)
+                Spike(x, y, tile_width, tile_height, spikes_group, all_sprites)
     return hero, x, y
 
 
@@ -165,6 +160,7 @@ def main():
         screen.fill((218, 187, 253))
         ladder_group.draw(screen)
         water_group.draw(screen)
+        spikes_group.draw(screen)
         air_group.draw(screen)
         hero_group.draw(screen)
         ground_group.draw(screen)
@@ -188,6 +184,7 @@ air_group = pygame.sprite.Group()
 water_group = pygame.sprite.Group()
 let_group = pygame.sprite.Group()  # стены
 ladder_group = pygame.sprite.Group()
+spikes_group = pygame.sprite.Group()
 items_group = pygame.sprite.Group()
 enemy_group = pygame.sprite.Group()
 hud_group = pygame.sprite.Group()

@@ -6,14 +6,14 @@ gravity = 0.25
 
 class Items(pygame.sprite.Sprite):
     def __init__(self, *groups):
-        super().__init__(groups)
+        super().__init__(*groups)
     # класс предметов которые лежат на земле
     # их можно подобрать
 
 
 class Coin(Items):
     def __init__(self, x, y, coin_im, *groups):
-        super().__init__(groups)
+        super().__init__(*groups)
         self.image = coin_im
         self.rect = self.image.get_rect().move(x,
                                                y - 70)

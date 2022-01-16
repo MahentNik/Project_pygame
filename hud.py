@@ -14,7 +14,7 @@ COOLDOWN__O2 = 2000
 
 class Hud(pygame.sprite.Sprite):
     def __init__(self, player, pos_x, pos_y, no_hp_im, half_hp_im, hp_im, o2_im, coin_im, numbers, *groups):
-        super().__init__(groups)
+        super().__init__(*groups)
 
         self.hero = player
 
@@ -110,6 +110,7 @@ class Hud(pygame.sprite.Sprite):
         photo_0, photo_1, photo_2, photo_3, photo_4, photo_5, photo_6, photo_7, photo_8, photo_9 = self.numbers
 
         hud_screen = pygame.Surface((300, 150))
+        hud_screen.fill((218, 187, 253))
 
         pos_x = 0
         for i in range(HERO_HP):
