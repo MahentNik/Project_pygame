@@ -74,12 +74,7 @@ def create_level(name_level, images):
     return hero, x, y
 
 
-def main():
-    pygame.init()
-
-    screen = pygame.display.set_mode(WINDOW_SIZE)
-
-    # загрузка картинок
+def get_images():
     hero_im = load_image('p1_stand.png', -1)
     brick = load_image('brickWall.png', -1)
     snail_image = load_image('snailWalk1.png', -1)
@@ -89,17 +84,25 @@ def main():
     coin_box = load_image("boxCoin.png", -1)
     coin_im = load_image("coinGold.png", -1)
     images = [hero_im, brick, snail_image, fish_image, ladder_image, water_image, coin_box, coin_im]
-    no_hp_im = load_image("no_hp.png", -1)
-    half_hp_im = load_image("half_hp.png", -1)
-    hp_im = load_image("hp.png", -1)
-    o2_im = load_image("o2.png")
+    for_hud = [load_image("no_hp.png", -1), load_image("half_hp.png", -1), load_image("hp.png", -1),
+               load_image("o2.png")]
     numbers = load_image("hud_0.png"), load_image("hud_1.png"), load_image("hud_2.png"), load_image(
         "hud_3.png"), load_image("hud_4.png"), load_image("hud_5.png"), load_image("hud_6.png"), load_image(
         "hud_7.png"), load_image("hud_8.png"), load_image("hud_9.png")
+    return images, for_hud, numbers
+
+
+def main():
+    pygame.init()
+
+    screen = pygame.display.set_mode(WINDOW_SIZE)
+
+    # загрузка картинок
+    images, for_hud, numbers = get_images()
 
     clock = pygame.time.Clock()
     hero, level_x, level_y = create_level(PRIMITIVE_LEVEL, images)
-    hud = Hud(hero, 0, 0, no_hp_im, half_hp_im, hp_im, o2_im, coin_im, numbers, hud_group, all_sprites)
+    hud = Hud(hero, 0, 0, for_hud, numbers, hud_group, all_sprites)
     camera = Camera((level_x, level_y), WIDTH, HEIGHT)
     is_left = is_right = False
     up = False

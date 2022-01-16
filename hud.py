@@ -13,7 +13,7 @@ COOLDOWN__O2 = 2000
 
 
 class Hud(pygame.sprite.Sprite):
-    def __init__(self, player, pos_x, pos_y, no_hp_im, half_hp_im, hp_im, o2_im, coin_im, numbers, *groups):
+    def __init__(self, player, pos_x, pos_y, for_hud, numbers, *groups):
         super().__init__(*groups)
 
         self.hero = player
@@ -24,18 +24,18 @@ class Hud(pygame.sprite.Sprite):
         self.tile = 50
 
         self.coin_counter = 0
-        self.coin_im = coin_im
+        self.coin_im = for_hud[4]
 
         self.HP = HERO_HP
-        self.HP_im = hp_im
-        self.halfHP_im = half_hp_im
-        self.no_hp_im = no_hp_im
+        self.HP_im = for_hud[2]
+        self.halfHP_im = for_hud[1]
+        self.no_hp_im = for_hud[0]
         self.visible_hp = True
 
         self.firs_damage = False
 
         self.O2 = HERO_OXYGEN
-        self.o2_im = o2_im
+        self.o2_im = for_hud[3]
         self.visible_o2 = False
 
         # цифры
