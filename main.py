@@ -70,7 +70,6 @@ def create_level(name_level, images):
                 Water(x, y, tile_width, tile_height, images[5], water_group, all_sprites)
                 Fish(x, y, tile_width, tile_height, images[3], enemy_group, all_sprites)
             elif name_level[y][x] == 'd':
-                #Air(x, y, tile_width, tile_height, air_group, all_sprites)
                 Spike(x, y, tile_width, tile_height, images[8], spikes_group, all_sprites)
     return hero, x, y
 
