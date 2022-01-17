@@ -139,8 +139,8 @@ class Hud(pygame.sprite.Sprite):
             pos_x += change_pos
 
     def show_stats(self):
-        hud_screen = pygame.Surface((300, 140))
-        hud_screen.fill((218, 187, 253))
+        hud_screen = pygame.Surface((300, 140), pygame.SRCALPHA, 32)
+        hud_screen.convert_alpha()
 
         self.show_hp(hud_screen)
         self.show_coins(hud_screen)
