@@ -16,6 +16,7 @@ class Hero(pygame.sprite.Sprite):
         super().__init__(*groups)
         self.images = images
         self.image = self.images[0]
+        self.mirrored_images = [pygame.transform.flip(frame, True, False) for frame in self.images]
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect().move(tile_width * pos_x,
                                                tile_height * pos_y)
@@ -61,6 +62,22 @@ class Hero(pygame.sprite.Sprite):
             self.ladder_collide(wat_up, wat_down, left, right, let_group)
         if other_collide(self, enemy_group) or other_collide(self, spikes_group):
             self.enemy_collide(enemy_group, spikes_group, let_group)
+
+    # смена кадров
+    def frame_changes(self, left, right):
+        cur_frame = 0
+        if left:
+            cur_images = self.mirrored_images
+        else:
+            cur_images = self.images
+
+        if self.on_Ground and not (left or right):
+            self.image = cur_images[0]
+        elif self.on_Ground and (left or right):
+            cur_frame = (cur_frame + 1) % len(cur_images)
+            self.image = cur_images[:2][cur_frame]
+        else:
+            self.image = cur_images[2]
 
     # столкновения с врагами
     def enemy_collide(self, enemy_group, spikes_group, let_group):

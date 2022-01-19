@@ -88,7 +88,7 @@ def get_images():
     coin_box = load_image("boxCoin.png", -1)
     coin_im = load_image("coinGold1.png", -1)
     spike_im = load_image('spikes.png', -1)
-    hero_images = [stand_im, jump_im, walk_im]
+    hero_images = [stand_im, walk_im, jump_im]
     images = [hero_images, brick, snail_image, fish_image, ladder_image, water_image, coin_box, coin_im, spike_im]
     for_hud = [load_image("no_hp.png", -1), load_image("half_hp.png", -1), load_image("hp.png", -1),
                load_image("o2.png"), coin_im]
@@ -114,10 +114,13 @@ def main():
     hero, level_x, level_y = create_level(PRIMITIVE_LEVEL, images)
     hud = Hud(hero, 0, 0, for_hud, numbers, hud_group, all_sprites)
     camera = Camera((level_x, level_y), WIDTH, HEIGHT)
+
     is_left = is_right = False
     up = False
     wat_up = False
     wat_down = False
+
+    pygame.time.set_timer(FRAME_CHANGE, 60)
 
     running = True
     while running:
@@ -159,6 +162,8 @@ def main():
                 is_time_o2 = True
             if event.type == RELOAD__o2:
                 is_time__o2 = True
+            if event.type == FRAME_CHANGE:
+                hero.frame_changes(is_left, is_right)
         camera.update(hero)
 
         for sprite in all_sprites:
