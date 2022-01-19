@@ -74,8 +74,8 @@ class Hero(pygame.sprite.Sprite):
         if self.on_Ground and not (left or right):
             self.image = cur_images[0]
         elif self.on_Ground and (left or right):
-            cur_frame = (cur_frame + 1) % len(cur_images)
-            self.image = cur_images[:2][cur_frame]
+            cur_frame = (cur_frame + 1) % len(cur_images[:2])
+            self.image = cur_images[cur_frame]
         else:
             self.image = cur_images[2]
 
