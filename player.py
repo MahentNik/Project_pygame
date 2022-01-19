@@ -15,7 +15,8 @@ class Hero(pygame.sprite.Sprite):
                  *groups):
         super().__init__(*groups)
         self.images = images
-        self.image = self.images[0]
+        self.cur_frame = 0
+        self.image = self.images[self.cur_frame]
         self.mirrored_images = [pygame.transform.flip(frame, True, False) for frame in self.images]
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect().move(tile_width * pos_x,
@@ -65,7 +66,6 @@ class Hero(pygame.sprite.Sprite):
 
     # смена кадров
     def frame_changes(self, left, right):
-        cur_frame = 0
         if left:
             cur_images = self.mirrored_images
         else:
@@ -74,8 +74,9 @@ class Hero(pygame.sprite.Sprite):
         if self.on_Ground and not (left or right):
             self.image = cur_images[0]
         elif self.on_Ground and (left or right):
-            cur_frame = (cur_frame + 1) % len(cur_images[:2])
-            self.image = cur_images[cur_frame]
+            self.cur_frame = (self.cur_frame + 1) % len(cur_images[:2])
+            print(self.cur_frame, len(cur_images[:2]))
+            self.image = cur_images[self.cur_frame]
         else:
             self.image = cur_images[2]
 
@@ -85,7 +86,6 @@ class Hero(pygame.sprite.Sprite):
         for sprite in sp:
             if pygame.sprite.collide_mask(self, sprite):
                 point = pygame.sprite.collide_mask(sprite, self)
-                print(point)
                 if point[0] < sprite.rect.width // 2:
                     self.vx = -15
                 else:
