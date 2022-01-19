@@ -6,6 +6,7 @@ class Fish(pygame.sprite.Sprite):
     def __init__(self, pos_x, pos_y, tile_width, tile_height, image, *groups):
         super().__init__(*groups)
         self.image = image
+        self.mask = pygame.mask.from_surface(self.image)
         self.not_mirrored_image = pygame.transform.flip(self.image, True, False)
         self.mirror_image = self.image
         self.fish_speed = 3

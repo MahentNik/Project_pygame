@@ -17,6 +17,7 @@ RELOAD_HIT = pygame.USEREVENT + 76  # перезарядка получения 
 RELOAD_o2 = pygame.USEREVENT + 77  # перезарядка получения кислорода
 RELOAD__o2 = pygame.USEREVENT + 78  # перезарядка отнимания кислорода
 REPEAT_MUSIC = pygame.USEREVENT + 1
+FRAME_CHANGE = pygame.USEREVENT + 2
 
 tile_width = tile_height = 70
 PRIMITIVE_LEVEL = [
@@ -75,7 +76,9 @@ def create_level(name_level, images):
 
 
 def get_images():
-    hero_im = load_image('p1_stand.png', -1)
+    jump_im = load_image('p1_jump.png', -1)
+    walk_im = load_image('p1_walk11.png', -1)
+    stand_im = load_image('p1_stand.png', -1)
     brick = load_image('brickWall.png', -1)
     snail_image = load_image('snailWalk1.png', -1)
     fish_image = load_image('fishSwim1.png', -1)
@@ -84,7 +87,8 @@ def get_images():
     coin_box = load_image("boxCoin.png", -1)
     coin_im = load_image("coinGold1.png", -1)
     spike_im = load_image('spikes.png', -1)
-    images = [hero_im, brick, snail_image, fish_image, ladder_image, water_image, coin_box, coin_im, spike_im]
+    hero_images = [stand_im, jump_im, walk_im]
+    images = [hero_images, brick, snail_image, fish_image, ladder_image, water_image, coin_box, coin_im, spike_im]
     for_hud = [load_image("no_hp.png", -1), load_image("half_hp.png", -1), load_image("hp.png", -1),
                load_image("o2.png"), coin_im]
     numbers = load_image("hud_0.png", -1), load_image("hud_1.png", -1), load_image("hud_2.png", -1), load_image(
@@ -120,6 +124,7 @@ def main():
             if event.type == pygame.QUIT:
                 running = False
             if event.type == REPEAT_MUSIC:
+                pass
                 pygame.mixer.music.play()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
@@ -155,7 +160,7 @@ def main():
             camera.apply(sprite)
 
         hero.update(is_left, is_right, up, wat_up, wat_down, let_group, water_group, ladder_group, enemy_group,
-                    coin_group, air_group, coin_box_group)
+                    coin_group, air_group, coin_box_group, spikes_group, may_get_damaged)
         hud.update(water_group, enemy_group, coin_group, air_group, spikes_group, may_get_damaged,
                    is_time_o2, is_time__o2)
 

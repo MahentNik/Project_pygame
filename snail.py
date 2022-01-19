@@ -6,6 +6,7 @@ class Snail(pygame.sprite.Sprite):
     def __init__(self, pos_x, pos_y, tile_width, tile_height, image, *groups):
         super().__init__(*groups)
         self.image = image
+        self.mask = pygame.mask.from_surface(self.image)
         self.not_mirrored_image = image
         self.mirror_image = pygame.transform.flip(self.image, True, False)
         self.snail_speed = 3
