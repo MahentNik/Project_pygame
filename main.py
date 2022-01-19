@@ -13,6 +13,7 @@ from tiles import *
 # основные переменные
 WINDOW_SIZE = WIDTH, HEIGHT = 1600, 800
 FPS = 60
+
 RELOAD_HIT = pygame.USEREVENT + 76  # перезарядка получения урона
 RELOAD_o2 = pygame.USEREVENT + 77  # перезарядка получения кислорода
 RELOAD__o2 = pygame.USEREVENT + 78  # перезарядка отнимания кислорода
@@ -101,6 +102,10 @@ def main():
     pygame.init()
 
     screen = pygame.display.set_mode(WINDOW_SIZE)
+
+    # музыка
+    pygame.mixer.music.load('data/song.ogg')
+    # pygame.mixer.music.play()
 
     # загрузка картинок
     images, for_hud, numbers = get_images()
