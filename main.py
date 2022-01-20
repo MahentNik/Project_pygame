@@ -1,4 +1,3 @@
-import os
 import pygame
 from load_image import load_image
 from snail import Snail
@@ -7,7 +6,6 @@ from player import Hero
 from camera import Camera
 from hud import Hud
 from items import Coin
-from spike import Spike
 from tiles import *
 
 # основные переменные
@@ -18,7 +16,7 @@ RELOAD_HIT = pygame.USEREVENT + 76  # перезарядка получения 
 RELOAD_o2 = pygame.USEREVENT + 77  # перезарядка получения кислорода
 RELOAD__o2 = pygame.USEREVENT + 78  # перезарядка отнимания кислорода
 REPEAT_MUSIC = pygame.USEREVENT + 1
-FRAME_CHANGE = pygame.USEREVENT + 2
+FRAME_CHANGE = pygame.USEREVENT + 2  # смена кадра
 
 tile_width = tile_height = 70
 PRIMITIVE_LEVEL = [
@@ -120,7 +118,7 @@ def main():
     wat_up = False
     wat_down = False
 
-    pygame.time.set_timer(FRAME_CHANGE, 60)
+    pygame.time.set_timer(FRAME_CHANGE, 90)
 
     running = True
     while running:
@@ -163,7 +161,7 @@ def main():
             if event.type == RELOAD__o2:
                 is_time__o2 = True
             if event.type == FRAME_CHANGE:
-                hero.frame_changes(is_left, is_right)
+                hero.frame_changes(is_left, is_right, up)
         camera.update(hero)
 
         for sprite in all_sprites:

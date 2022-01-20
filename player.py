@@ -65,17 +65,16 @@ class Hero(pygame.sprite.Sprite):
             self.enemy_collide(enemy_group, spikes_group, let_group)
 
     # смена кадров
-    def frame_changes(self, left, right):
+    def frame_changes(self, left, right, up):
         if left:
             cur_images = self.mirrored_images
         else:
             cur_images = self.images
 
-        if self.on_Ground and not (left or right):
+        if not up and not (left or right):
             self.image = cur_images[0]
-        elif self.on_Ground and (left or right):
+        elif not up and (left or right):
             self.cur_frame = (self.cur_frame + 1) % len(cur_images[:2])
-            print(self.cur_frame, len(cur_images[:2]))
             self.image = cur_images[self.cur_frame]
         else:
             self.image = cur_images[2]
