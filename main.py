@@ -103,7 +103,7 @@ def main():
 
     # музыка
     pygame.mixer.music.load('data/song.ogg')
-    # pygame.mixer.music.play()
+    pygame.mixer.music.play()
 
     # загрузка картинок
     images, for_hud, numbers = get_images()
@@ -191,8 +191,8 @@ def main():
     pygame.quit()
 
 
-coin_box_group = pygame.sprite.Group()  # если монеты будут просто спавниться на земле то эта группа не нужна
-# это является и препятствием и отдельной группой
+# группы спрайтов
+coin_box_group = pygame.sprite.Group()
 ground_group = pygame.sprite.Group()
 coin_group = pygame.sprite.Group()
 all_sprites = pygame.sprite.Group()

@@ -1,6 +1,7 @@
 import pygame
 
 
+# класс плитки
 class Tile(pygame.sprite.Sprite):
 
     def __init__(self, pos_x, pos_y, tile_width, tile_height, *groups):
@@ -10,6 +11,7 @@ class Tile(pygame.sprite.Sprite):
                                                tile_height * pos_y)
 
 
+# класс воздуха
 class Air(Tile):
 
     def __init__(self, pos_x, pos_y, tile_width, tile_height, *groups):
@@ -17,6 +19,7 @@ class Air(Tile):
         self.image.fill(pygame.Color(218, 187, 253))
 
 
+# класс земли и стен
 class Ground(Tile):
 
     def __init__(self, pos_x, pos_y, tile_width, tile_height, image, *groups):
@@ -24,6 +27,7 @@ class Ground(Tile):
         self.image = image
 
 
+# класс воды
 class Water(Tile):
 
     def __init__(self, pos_x, pos_y, tile_width, tile_height, image, *groups):
@@ -31,6 +35,7 @@ class Water(Tile):
         self.image = image
 
 
+# класс лестницы
 class Ladder(Tile):
 
     def __init__(self, pos_x, pos_y, tile_width, tile_height, image, *groups):
@@ -38,6 +43,7 @@ class Ladder(Tile):
         self.image = image
 
 
+# класс ящика с монетой
 class CoinBox(Tile):
 
     def __init__(self, pos_x, pos_y, tile_width, tile_height, image, *groups):
@@ -45,6 +51,7 @@ class CoinBox(Tile):
         self.image = image
 
 
+# класс шипов
 class Spike(Tile):
 
     def __init__(self, pos_x, pos_y, tile_width, tile_height, image, *groups):

@@ -1,6 +1,7 @@
 import pygame
 
 
+# класс рыбы
 class Fish(pygame.sprite.Sprite):
 
     def __init__(self, pos_x, pos_y, tile_width, tile_height, image, *groups):

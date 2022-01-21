@@ -1,5 +1,6 @@
 import pygame
 
+# константы
 HUD_SIZE = (HUD_WIDTH, HUD_HEIGHT) = (300, 150)
 HERO_HP = 6
 HERO_OXYGEN = 6
@@ -100,6 +101,7 @@ class Hud(pygame.sprite.Sprite):
 
         self.show_stats()
 
+    # размещение количества здоровья
     def show_hp(self, screen):
         pos_x = 0
         change_pos = 50
@@ -115,6 +117,7 @@ class Hud(pygame.sprite.Sprite):
                 screen.blit(self.halfHP_im, (pos_x, 0))
             pos_x += change_pos
 
+    # размещение количества монет
     def show_coins(self, screen):
         coins = str(self.coin_counter)
 
@@ -130,6 +133,7 @@ class Hud(pygame.sprite.Sprite):
             screen.blit(name_photo, (pos_x, 50))
             pos_x += change_pos
 
+    # размещение количества кислорода
     def show_oxygen(self, screen):
         pos_x = 0
         change_pos = 50
@@ -138,6 +142,7 @@ class Hud(pygame.sprite.Sprite):
             screen.blit(self.o2_im, (pos_x, 90))
             pos_x += change_pos
 
+    # вывод параметров игрока
     def show_stats(self):
         hud_screen = pygame.Surface((300, 140), pygame.SRCALPHA, 32)
         hud_screen.convert_alpha()
@@ -151,5 +156,6 @@ class Hud(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
 
 
+# возвращает тип столкновения
 def collide(player, group, status=False):
     return pygame.sprite.spritecollide(player, group, status)

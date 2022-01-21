@@ -1,18 +1,18 @@
 import pygame
 from items import Coin
 
+# константы
 JUMP_POWER = 10
 HERO_SPEED = 6
 GRAVITY = 0.35
 WATER_RESISTANCE = TO_GRAVITY, TO_SPEED = (0.3, 4.5)  # сопротивление движения в воде
-# потом следует вычислять эти параметры в процентах (пока так)
 HERO_HP = 3
 HERO_OXYGEN = 6
 
 
 class Hero(pygame.sprite.Sprite):
-    def __init__(self, pos_x, pos_y, tile_width, tile_height, images, coin_im, coin_group, coin_box_group, all_sprites,
-                 *groups):
+    def __init__(self, pos_x, pos_y, tile_width, tile_height, images, coin_im, coin_group, coin_box_group,
+                 all_sprites, *groups):
         super().__init__(*groups)
         self.images = images
         self.cur_frame = 0
@@ -53,6 +53,7 @@ class Hero(pygame.sprite.Sprite):
                     self.rect.top = tile.rect.bottom
                     self.vy = 0
 
+    # обновление пероснажа
     def update(self, left, right, up, wat_up, wat_down, let_group, water_group, ladder_group, enemy_group,
                coin_group, air_group, coin_box_group, spikes_group, may_get_damage):
         if not other_collide(self, water_group) and not other_collide(self, ladder_group):
@@ -166,5 +167,6 @@ class Hero(pygame.sprite.Sprite):
     # еще один вопрос - будет ли наш персонаж атаковать? (можно убрать эту возможность) опять же по времени
 
 
+#  получение типа столкновения
 def other_collide(player, group, status=False):
     return pygame.sprite.spritecollide(player, group, status)
