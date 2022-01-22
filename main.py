@@ -6,17 +6,20 @@ from fish import Fish
 from player import Hero
 from camera import Camera
 from hud import Hud
-from items import Coin
+from items import Rune
 from spike import Spike
 from tiles import *
+from special_block import SpecialBlock
 
 # основные переменные
-WINDOW_SIZE = WIDTH, HEIGHT = 1600, 800
+WINDOW_SIZE = WIDTH, HEIGHT = 1300, 800
 FPS = 60
 RELOAD_HIT = pygame.USEREVENT + 76  # перезарядка получения урона
 RELOAD_o2 = pygame.USEREVENT + 77  # перезарядка получения кислорода
 RELOAD__o2 = pygame.USEREVENT + 78  # перезарядка отнимания кислорода
 REPEAT_MUSIC = pygame.USEREVENT + 1
+RUNE_MOVES = pygame.USEREVENT + 99
+RELOAD__05 = pygame.USEREVENT + 111
 
 tile_width = tile_height = 70
 PRIMITIVE_LEVEL = [
@@ -29,9 +32,9 @@ PRIMITIVE_LEVEL = [
     "-          w       l     -",
     "-      --- w       l    k-",
     "- dd       w       l    k-",
-    "--k-k-k-   w   -k- l     -",
-    "-                  l     -",
-    "-              s    -ww- -",
+    "--k-k-k-   w   -k- l     S",
+    "-                  l     S",
+    "-  r           s    -ww- -",
     "---------------------ww---",
     "-wwwww-  -wwwwwwwwwwwwwww-",
     "-wwwwwwwwwwwwwwfwwwwwwwww-",
@@ -55,7 +58,8 @@ def create_level(name_level, images):
                 Ground(x, y, tile_width, tile_height, images[1], let_group, ground_group, all_sprites)
             elif name_level[y][x] == '@':
                 Air(x, y, tile_width, tile_height, air_group, all_sprites)
-                hero = Hero(x, y, tile_width, tile_height, images[0], images[7], coin_group, coin_box_group,
+                hero = Hero(x, y, tile_width, tile_height, images[0], images[7], special_block_group, coin_group,
+                            coin_box_group,
                             all_sprites, hero_group, all_sprites)
             elif name_level[y][x] == 'w':
                 Water(x, y, tile_width, tile_height, images[5], water_group, all_sprites)
@@ -71,6 +75,12 @@ def create_level(name_level, images):
                 Fish(x, y, tile_width, tile_height, images[3], enemy_group, all_sprites)
             elif name_level[y][x] == 'd':
                 Spike(x, y, tile_width, tile_height, images[8], spikes_group, all_sprites)
+            elif name_level[y][x] == "r":
+                Air(x, y, tile_width, tile_height, air_group, all_sprites)
+                Rune(x, y, tile_width, tile_height, images[-2], rune_group, all_sprites)
+            elif name_level[y][x] == "S":
+                Air(x, y, tile_width, tile_height, air_group, all_sprites)
+                SpecialBlock(x, y, tile_width, tile_height, images[-1], let_group, special_block_group, all_sprites)
     return hero, x, y
 
 
@@ -84,12 +94,15 @@ def get_images():
     coin_box = load_image("boxCoin.png", -1)
     coin_im = load_image("coinGold1.png", -1)
     spike_im = load_image('spikes.png', -1)
-    images = [hero_im, brick, snail_image, fish_image, ladder_image, water_image, coin_box, coin_im, spike_im]
+    rune_im = load_image("rune.png", -1)
+    special = load_image("special.png", -1)
+    images = [hero_im, brick, snail_image, fish_image, ladder_image, water_image, coin_box, coin_im, spike_im, rune_im,
+              special]
     for_hud = [load_image("no_hp.png", -1), load_image("half_hp.png", -1), load_image("hp.png", -1),
                load_image("o2.png"), coin_im]
     numbers = load_image("hud_0.png", -1), load_image("hud_1.png", -1), load_image("hud_2.png", -1), load_image(
         "hud_3.png", -1), load_image("hud_4.png", -1), load_image("hud_5.png", -1), load_image("hud_6.png", -1), \
-        load_image("hud_7.png", -1), load_image("hud_8.png", -1), load_image("hud_9.png", -1)
+              load_image("hud_7.png", -1), load_image("hud_8.png", -1), load_image("hud_9.png", -1)
     return images, for_hud, numbers
 
 
@@ -110,17 +123,27 @@ def main():
     wat_up = False
     wat_down = False
 
+    # timers
+    pygame.time.set_timer(RUNE_MOVES, 140)
+
     running = True
     while running:
         may_get_damaged = False  # перезарядка получения урона
         is_time_o2 = False  # перезарядка получения кислорода
         is_time__o2 = False  # перезарядка отнимания кислорода
+        is_time__05 = False
+
+        rune_event = False
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+            if event.type == RELOAD__05:
+                is_time__05 = True
             if event.type == REPEAT_MUSIC:
                 pygame.mixer.music.play()
+            if event.type == RUNE_MOVES:
+                rune_event = True
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     up = True
@@ -155,9 +178,11 @@ def main():
             camera.apply(sprite)
 
         hero.update(is_left, is_right, up, wat_up, wat_down, let_group, water_group, ladder_group, enemy_group,
-                    coin_group, air_group, coin_box_group)
+                    coin_group, air_group, coin_box_group, rune_group)
         hud.update(water_group, enemy_group, coin_group, air_group, spikes_group, may_get_damaged,
-                   is_time_o2, is_time__o2)
+                   is_time_o2, is_time__o2, is_time__05)
+        if rune_event:
+            rune_group.update()
 
         enemy_group.update()
         coin_group.update(ground_group)
@@ -171,6 +196,8 @@ def main():
         coin_box_group.draw(screen)
         coin_group.draw(screen)
         enemy_group.draw(screen)
+        rune_group.draw(screen)
+        special_block_group.draw(screen)
         hud_group.draw(screen)
 
         pygame.display.flip()
@@ -178,6 +205,8 @@ def main():
     pygame.quit()
 
 
+special_block_group = pygame.sprite.Group()
+rune_group = pygame.sprite.Group()
 coin_box_group = pygame.sprite.Group()  # если монеты будут просто спавниться на земле то эта группа не нужна
 # это является и препятствием и отдельной группой
 ground_group = pygame.sprite.Group()

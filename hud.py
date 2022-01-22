@@ -10,6 +10,7 @@ RELOAD_o2 = pygame.USEREVENT + 77  # перезарядка получения �
 COOLDOWN_O2 = 1000
 RELOAD__o2 = pygame.USEREVENT + 78  # перезарядка отнимания кислорода
 COOLDOWN__O2 = 2000
+RELOAD__05 = pygame.USEREVENT + 111
 
 
 class Hud(pygame.sprite.Sprite):
@@ -45,11 +46,12 @@ class Hud(pygame.sprite.Sprite):
         self.timer_hp = False
         self.timer_o2 = False
         self.timer__o2 = False
+        self.timer__05 = False
 
         self.show_stats()
 
     def update(self, water_group, enemy_group, coin_group, air_group, spikes_group,
-               may_get_damaged, is_time_o2, is_time__o2):
+               may_get_damaged, is_time_o2, is_time__o2, is_time__05):
 
         self.visible_o2 = False
 
@@ -66,6 +68,16 @@ class Hud(pygame.sprite.Sprite):
             self.firs_damage = True
 
         if self.O2 == 0:
+            if not self.timer__05:
+                pygame.time.set_timer(RELOAD__05, 1000)
+                self.timer__05 = True
+            if is_time__05:
+                self.HP -= 0.5
+        else:
+            pygame.time.set_timer(RELOAD__05, 0)
+            self.timer__05 = False
+
+        if self.HP == 0:
             self.hero.kill()
             # если кислород кончится, то будет или смерть, или будкт отниматься по полхп
 
@@ -94,9 +106,16 @@ class Hud(pygame.sprite.Sprite):
                         self.O2 -= 1
         else:
             pygame.time.set_timer(RELOAD__o2, 0)
-            pygame.time.set_timer(RELOAD_o2, 0)
             self.timer__o2 = False
-            self.timer_o2 = False
+            if self.O2 < HERO_OXYGEN:
+                if not self.timer_o2:
+                    pygame.time.set_timer(RELOAD_o2, COOLDOWN_O2)
+                    self.timer_o2 = True
+                if is_time_o2:
+                    self.O2 += 1
+            else:
+                pygame.time.set_timer(RELOAD_o2, COOLDOWN_O2)
+                self.timer_o2 = False
 
         self.show_stats()
 

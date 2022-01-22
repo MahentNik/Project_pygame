@@ -12,7 +12,9 @@ HERO_OXYGEN = 6
 
 
 class Hero(pygame.sprite.Sprite):
-    def __init__(self, pos_x, pos_y, tile_width, tile_height, image, coin_im, coin_group, coin_box_group, all_sprites,
+    def __init__(self, pos_x, pos_y, tile_width, tile_height, image, coin_im, special_block_group, coin_group,
+                 coin_box_group,
+                 all_sprites,
                  *groups):
         super().__init__(groups)
         self.image = image
@@ -29,19 +31,30 @@ class Hero(pygame.sprite.Sprite):
         self.vy = 0
         self.on_Ground = False
 
+        self.rune_item = False
+        self.special_block = special_block_group
+
     def collide(self, vx, vy, lets):
         for tile in lets:
             if pygame.sprite.collide_rect(self, tile):
                 if vx > 0:
+                    if self.other_collide(self, self.special_block, True):
+                        self.bom_anim()
                     self.rect.right = tile.rect.left
                 if vx < 0:
+                    if self.other_collide(self, self.special_block, True):
+                        self.bom_anim()
                     self.rect.left = tile.rect.right
                 if vy > 0:
+                    if self.other_collide(self, self.special_block, True):
+                        self.bom_anim()
                     self.rect.bottom = tile.rect.top
                     self.on_Ground = True
                     self.vy = 0
 
                 if vy < 0:
+                    if self.other_collide(self, self.special_block, True):
+                        self.bom_anim()
                     if self.other_collide(self, self.coin_box_group):
                         sp = self.other_collide(self, self.coin_box_group, True)
                         for i in sp:
@@ -50,11 +63,16 @@ class Hero(pygame.sprite.Sprite):
                     self.rect.top = tile.rect.bottom
                     self.vy = 0
 
+    def bom_anim(self):
+        pass
+
     def other_collide(self, player, group, status=False):
         return pygame.sprite.spritecollide(player, group, status)
 
     def update(self, left, right, up, wat_up, wat_down, let_group, water_group, ladder_group, enemy_group,
-               coin_group, air_group, coin_box_group):
+               coin_group, air_group, coin_box_group, rune_group):
+        if self.other_collide(self, rune_group, True):
+            self.rune_item = True
         if not self.other_collide(self, water_group) and not self.other_collide(self, ladder_group):
             if up:
                 if self.on_Ground:

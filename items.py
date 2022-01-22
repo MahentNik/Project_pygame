@@ -32,19 +32,20 @@ class Coin(Items):
             self.rect.y += self.vy
         else:
             self.vx, self.vy = 0, 0
-
     # класс монета
 
 
-class Gun(Items):
-    pass
-    # класс оружия (если успеем)
-
-
 class Rune(Items):
-    pass
-    # класс руны которая делает тебя невоспреимчивым к урону на 5 сек (кулдаун 25 сек)
-    # или дает тебе возможность пройти через тайную текстуру class Secret
+    def __init__(self, x, y, tile_width, tile_height, rune_im, *groups):
+        super().__init__(*groups)
+        self.image = rune_im
+        self.rect = self.image.get_rect().move(tile_width * x,
+                                               tile_height * y)
+        self.move = 10
+
+    def update(self):
+        self.move = -self.move
+        self.rect.y += self.move
 
 
 def collide(player, group, status=False):
