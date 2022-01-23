@@ -13,6 +13,7 @@ from special_block import SpecialBlock
 from pause_menu import PauseMenu
 from menu_cycle import menu_cycle
 from pause_cycle import pause_cycle
+from end_screen import EndScreen
 
 # основные переменные
 WINDOW_SIZE = WIDTH, HEIGHT = 1300, 800
@@ -93,6 +94,7 @@ def create_level(name_level, images):
 
 
 def get_images():
+    end_game_im = load_image("end_screen.png")
     hero_im = load_image('p1_stand.png', -1)
     brick = load_image('brickWall.png', -1)
     snail_image = load_image('snailWalk1.png', -1)
@@ -111,7 +113,7 @@ def get_images():
     numbers = load_image("hud_0.png", -1), load_image("hud_1.png", -1), load_image("hud_2.png", -1), load_image(
         "hud_3.png", -1), load_image("hud_4.png", -1), load_image("hud_5.png", -1), load_image("hud_6.png", -1), \
               load_image("hud_7.png", -1), load_image("hud_8.png", -1), load_image("hud_9.png", -1)
-    return images, for_hud, numbers
+    return end_game_im, images, for_hud, numbers
 
 
 def main():
@@ -130,28 +132,27 @@ def main():
     dif = menu_cycle(clock, FPS, WINDOW_SIZE, screen)
 
     # загрузка картинок
-    images, for_hud, numbers = get_images()
+    end_game_im, images, for_hud, numbers = get_images()
 
     hero, level_x, level_y = create_level(PRIMITIVE_LEVEL, images)
     hud = Hud(*difficult[dif], hero, 0, 0, for_hud, numbers, hud_group, all_sprites)
     camera = Camera((level_x, level_y), WIDTH, HEIGHT)
+
     is_left = is_right = False
     up = False
     wat_up = False
     wat_down = False
-
     is_paused = False
+    running = True
 
     # timers
     pygame.time.set_timer(RUNE_MOVES, 140)
-
-    running = True
     while running:
+
         may_get_damaged = False  # перезарядка получения урона
         is_time_o2 = False  # перезарядка получения кислорода
         is_time__o2 = False  # перезарядка отнимания кислорода
         is_time__05 = False
-
         rune_event = False
 
         for event in pygame.event.get():
@@ -204,6 +205,7 @@ def main():
                         coin_group, air_group, coin_box_group, rune_group)
             hud.update(water_group, enemy_group, coin_group, air_group, spikes_group, may_get_damaged,
                        is_time_o2, is_time__o2, is_time__05)
+            hero_status = hud.hero_status()
 
             if rune_event:
                 rune_group.update()
@@ -227,9 +229,16 @@ def main():
         special_block_group.draw(screen)
         hud_group.draw(screen)
 
+        if hero_status:
+            pygame.mixer.music.pause()
+            end_game_screen = EndScreen(end_game_im, screen, clock, FPS)
+            end_game_screen.create_screen()
+            running = False
+            for i in all_sprites:
+                i.kill()
+            main()
         pygame.display.flip()
         clock.tick(FPS)
-    pygame.quit()
 
 
 special_block_group = pygame.sprite.Group()

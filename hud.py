@@ -79,10 +79,6 @@ class Hud(pygame.sprite.Sprite):
             pygame.time.set_timer(RELOAD__05, 0)
             self.timer__05 = False
 
-        if self.HP <= 0:
-            EndScreen()
-            # если кислород кончится, то будет или смерть, или будкт отниматься по полхп
-
         if collide(self.hero, coin_group, True):
             self.coin_counter += 1
 
@@ -120,6 +116,13 @@ class Hud(pygame.sprite.Sprite):
                 self.timer_o2 = False
 
         self.show_stats()
+
+    def hero_status(self):
+        if self.HP <= 0:
+            self.hero.kill()
+            return True
+        else:
+            return None
 
     def show_hp(self, screen):
         pos_x = 0
