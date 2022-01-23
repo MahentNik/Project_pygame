@@ -33,5 +33,4 @@ class Menu:
             relative_rect=pygame.Rect((size[0] // 2 - start_btn_width // 2, size[1] - size[1] // 2),
                                       (exit_btn_width, exit_btn_height)),
             manager=self.manager,
-
         )

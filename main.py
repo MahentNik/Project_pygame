@@ -211,7 +211,8 @@ def main():
             enemy_group.update()
             coin_group.update(ground_group)
         else:
-            pause_cycle()
+            pause_cycle(clock, FPS, WINDOW_SIZE, screen)
+            is_paused = False
         screen.fill((218, 187, 253))
         ladder_group.draw(screen)
         water_group.draw(screen)
