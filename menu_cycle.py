@@ -2,6 +2,7 @@ import pygame
 import pygame_gui
 from terminate import terminate
 from menu import Menu
+from confirm import create_confirm
 
 REPEAT_MUSIC = pygame.USEREVENT + 1
 
@@ -14,17 +15,19 @@ def menu_cycle(clock, fps, window_size, screen):
         time_delta = clock.tick(fps) / 1000.0
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                terminate()
+                create_confirm(manager, window_size)
             if event.type == REPEAT_MUSIC:
                 pygame.mixer.music.play()
             if event.type == pygame.USEREVENT:
+                if event.user_type == pygame_gui.UI_CONFIRMATION_DIALOG_CONFIRMED:
+                    terminate()
                 if event.user_type == pygame_gui.UI_DROP_DOWN_MENU_CHANGED:
                     menu.game_difficult = event.text
                 if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
                     if event.ui_element == menu.start_btn:
                         return menu.game_difficult
                     elif event.ui_element == menu.exit_btn:
-                        terminate()
+                        create_confirm(manager, window_size)
             manager.process_events(event)
         screen.fill((218, 187, 253))
         manager.update(time_delta)
