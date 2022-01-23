@@ -10,6 +10,9 @@ from items import Rune
 from spike import Spike
 from tiles import *
 from special_block import SpecialBlock
+from pause_menu import PauseMenu
+from menu_cycle import menu_cycle
+from pause_cycle import pause_cycle
 
 # основные переменные
 WINDOW_SIZE = WIDTH, HEIGHT = 1300, 800
@@ -20,6 +23,11 @@ RELOAD__o2 = pygame.USEREVENT + 78  # перезарядка отнимания 
 REPEAT_MUSIC = pygame.USEREVENT + 1
 RUNE_MOVES = pygame.USEREVENT + 99
 RELOAD__05 = pygame.USEREVENT + 111
+
+difficult = {"Easy": (6, 6),
+             "Medium": (4, 6),
+             "Hard": (2, 5)
+             }
 
 tile_width = tile_height = 70
 PRIMITIVE_LEVEL = [
@@ -111,17 +119,28 @@ def main():
 
     screen = pygame.display.set_mode(WINDOW_SIZE)
 
+    clock = pygame.time.Clock()
+
+    # музыка
+    pygame.mixer.music.load('data/song.ogg')
+    pygame.mixer.music.play()
+    pygame.time.set_timer(REPEAT_MUSIC, 60000)
+
+    # загрузка меню
+    dif = menu_cycle(clock, FPS, WINDOW_SIZE, screen)
+
     # загрузка картинок
     images, for_hud, numbers = get_images()
 
-    clock = pygame.time.Clock()
     hero, level_x, level_y = create_level(PRIMITIVE_LEVEL, images)
-    hud = Hud(hero, 0, 0, for_hud, numbers, hud_group, all_sprites)
+    hud = Hud(*difficult[dif], hero, 0, 0, for_hud, numbers, hud_group, all_sprites)
     camera = Camera((level_x, level_y), WIDTH, HEIGHT)
     is_left = is_right = False
     up = False
     wat_up = False
     wat_down = False
+
+    is_paused = False
 
     # timers
     pygame.time.set_timer(RUNE_MOVES, 140)
@@ -138,10 +157,10 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-            if event.type == RELOAD__05:
-                is_time__05 = True
             if event.type == REPEAT_MUSIC:
                 pygame.mixer.music.play()
+            if event.type == RELOAD__05:
+                is_time__05 = True
             if event.type == RUNE_MOVES:
                 rune_event = True
             if event.type == pygame.KEYDOWN:
@@ -156,6 +175,8 @@ def main():
                 elif event.key == pygame.K_RIGHT:
                     is_right = True
             if event.type == pygame.KEYUP:
+                if event.key == pygame.K_p or event.key == pygame.K_ESCAPE:
+                    is_paused = not is_paused
                 if event.key == pygame.K_SPACE:
                     up = False
                 if event.key == pygame.K_UP:
@@ -172,20 +193,25 @@ def main():
                 is_time_o2 = True
             if event.type == RELOAD__o2:
                 is_time__o2 = True
-        camera.update(hero)
 
-        for sprite in all_sprites:
-            camera.apply(sprite)
+        if not is_paused:
+            camera.update(hero)
 
-        hero.update(is_left, is_right, up, wat_up, wat_down, let_group, water_group, ladder_group, enemy_group,
-                    coin_group, air_group, coin_box_group, rune_group)
-        hud.update(water_group, enemy_group, coin_group, air_group, spikes_group, may_get_damaged,
-                   is_time_o2, is_time__o2, is_time__05)
-        if rune_event:
-            rune_group.update()
+            for sprite in all_sprites:
+                camera.apply(sprite)
 
-        enemy_group.update()
-        coin_group.update(ground_group)
+            hero.update(is_left, is_right, up, wat_up, wat_down, let_group, water_group, ladder_group, enemy_group,
+                        coin_group, air_group, coin_box_group, rune_group)
+            hud.update(water_group, enemy_group, coin_group, air_group, spikes_group, may_get_damaged,
+                       is_time_o2, is_time__o2, is_time__05)
+
+            if rune_event:
+                rune_group.update()
+
+            enemy_group.update()
+            coin_group.update(ground_group)
+        else:
+            pause_cycle()
         screen.fill((218, 187, 253))
         ladder_group.draw(screen)
         water_group.draw(screen)

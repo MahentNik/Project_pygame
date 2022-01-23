@@ -1,8 +1,7 @@
 import pygame
+from end_screen import EndScreen
 
 HUD_SIZE = (HUD_WIDTH, HUD_HEIGHT) = (300, 150)
-HERO_HP = 6
-HERO_OXYGEN = 6
 
 RELOAD_HIT = pygame.USEREVENT + 76  # перезарядка получения урона
 COOLDOWN_DAMAGE = 1000
@@ -14,8 +13,11 @@ RELOAD__05 = pygame.USEREVENT + 111
 
 
 class Hud(pygame.sprite.Sprite):
-    def __init__(self, player, pos_x, pos_y, for_hud, numbers, *groups):
+    def __init__(self, hero_hp, hero_oxygen, player, pos_x, pos_y, for_hud, numbers, *groups):
         super().__init__(*groups)
+
+        self.hero_hp = hero_hp
+        self.hero_oxygen = hero_oxygen
 
         self.hero = player
 
@@ -27,7 +29,7 @@ class Hud(pygame.sprite.Sprite):
         self.coin_counter = 0
         self.coin_im = for_hud[4]
 
-        self.HP = HERO_HP
+        self.HP = hero_hp
         self.HP_im = for_hud[2]
         self.halfHP_im = for_hud[1]
         self.no_hp_im = for_hud[0]
@@ -35,7 +37,7 @@ class Hud(pygame.sprite.Sprite):
 
         self.firs_damage = False
 
-        self.O2 = HERO_OXYGEN
+        self.O2 = hero_oxygen
         self.o2_im = for_hud[3]
         self.visible_o2 = False
 
@@ -77,8 +79,8 @@ class Hud(pygame.sprite.Sprite):
             pygame.time.set_timer(RELOAD__05, 0)
             self.timer__05 = False
 
-        if self.HP == 0:
-            self.hero.kill()
+        if self.HP <= 0:
+            EndScreen()
             # если кислород кончится, то будет или смерть, или будкт отниматься по полхп
 
         if collide(self.hero, coin_group, True):
@@ -96,7 +98,7 @@ class Hud(pygame.sprite.Sprite):
                 if is_time_o2:
                     pygame.time.set_timer(RELOAD__o2, 0)
                     self.timer__o2 = False
-                    if self.O2 < HERO_OXYGEN:
+                    if self.O2 < self.hero_oxygen:
                         self.O2 += 1
             else:
                 if is_time__o2:
@@ -107,7 +109,7 @@ class Hud(pygame.sprite.Sprite):
         else:
             pygame.time.set_timer(RELOAD__o2, 0)
             self.timer__o2 = False
-            if self.O2 < HERO_OXYGEN:
+            if self.O2 < self.hero_oxygen:
                 if not self.timer_o2:
                     pygame.time.set_timer(RELOAD_o2, COOLDOWN_O2)
                     self.timer_o2 = True
@@ -123,7 +125,7 @@ class Hud(pygame.sprite.Sprite):
         pos_x = 0
         change_pos = 50
         hp = self.HP
-        for i in range(HERO_HP):
+        for i in range(self.hero_hp):
             if hp >= 1:
                 hp -= 1
                 screen.blit(self.HP_im, (pos_x, 0))

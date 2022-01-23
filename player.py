@@ -38,22 +38,22 @@ class Hero(pygame.sprite.Sprite):
         for tile in lets:
             if pygame.sprite.collide_rect(self, tile):
                 if vx > 0:
-                    if self.other_collide(self, self.special_block, True):
+                    if self.rune_item and self.other_collide(self, self.special_block, True):
                         self.bom_anim()
                     self.rect.right = tile.rect.left
                 if vx < 0:
-                    if self.other_collide(self, self.special_block, True):
+                    if self.rune_item and self.other_collide(self, self.special_block, True):
                         self.bom_anim()
                     self.rect.left = tile.rect.right
                 if vy > 0:
-                    if self.other_collide(self, self.special_block, True):
+                    if self.rune_item and self.other_collide(self, self.special_block, True):
                         self.bom_anim()
                     self.rect.bottom = tile.rect.top
                     self.on_Ground = True
                     self.vy = 0
 
                 if vy < 0:
-                    if self.other_collide(self, self.special_block, True):
+                    if self.rune_item and self.other_collide(self, self.special_block, True):
                         self.bom_anim()
                     if self.other_collide(self, self.coin_box_group):
                         sp = self.other_collide(self, self.coin_box_group, True)
