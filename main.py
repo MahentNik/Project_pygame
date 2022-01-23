@@ -1,5 +1,6 @@
 import os
 import pygame
+import pytmx
 from load_image import load_image
 from snail import Snail
 from fish import Fish
@@ -30,6 +31,8 @@ difficult = {"Easy": (6, 6),
              "Hard": (2, 5)
              }
 
+dir_levels = ["first_level.tmx", "second_level.tmx"]
+
 tile_width = tile_height = 70
 PRIMITIVE_LEVEL = [
     "------------------   -----",
@@ -59,35 +62,45 @@ PRIMITIVE_LEVEL = [
 
 
 def create_level(name_level, images):
-    for y in range(len(name_level)):
-        for x in range(len(name_level[y])):
-            if name_level[y][x] == ' ':
-                Air(x, y, tile_width, tile_height, air_group, all_sprites)
-            elif name_level[y][x] == '-':
-                Ground(x, y, tile_width, tile_height, images[1], let_group, ground_group, all_sprites)
-            elif name_level[y][x] == '@':
+    fullname = os.path.join('levels', name_level)
+    level = pytmx.load_pygame(f'{fullname}')
+    for y in range(level.height):
+        for x in range(level.width):
+            im_1layer = level.get_tile_image(x, y, 0)
+            im_2layer = level.get_tile_image(x, y, 1)
+            id1 = level.tiledgidmap[level.get_tile_gid(x, y, 0)]
+            id2 = level.tiledgidmap[level.get_tile_gid(x, y, 1)]
+            if id1 == 159:
                 Air(x, y, tile_width, tile_height, air_group, all_sprites)
                 hero = Hero(x, y, tile_width, tile_height, images[0], images[7], special_block_group, coin_group,
                             coin_box_group,
                             all_sprites, hero_group, all_sprites)
-            elif name_level[y][x] == 'w':
+                Air(x, y, tile_width, tile_height, air_group, all_sprites)
+            elif level[y][x] == '-':
+                Ground(x, y, tile_width, tile_height, images[1], let_group, ground_group, all_sprites)
+            elif level[y][x] == '@':
+                Air(x, y, tile_width, tile_height, air_group, all_sprites)
+                hero = Hero(x, y, tile_width, tile_height, images[0], images[7], special_block_group, coin_group,
+                            coin_box_group,
+                            all_sprites, hero_group, all_sprites)
+            elif level[y][x] == 'w':
                 Water(x, y, tile_width, tile_height, images[5], water_group, all_sprites)
-            elif name_level[y][x] == 'l':
+            elif level[y][x] == 'l':
                 Ladder(x, y, tile_width, tile_height, images[4], ladder_group, all_sprites)
-            elif name_level[y][x] == "k":
+            elif level[y][x] == "k":
                 CoinBox(x, y, tile_width, tile_height, images[6], let_group, coin_box_group, air_group, all_sprites)
-            elif name_level[y][x] == 's':
+            elif level[y][x] == 's':
                 Air(x, y, tile_width, tile_height, air_group, all_sprites)
                 Snail(x, y, tile_width, tile_height, images[2], enemy_group, all_sprites)
-            elif name_level[y][x] == 'f':
+            elif level[y][x] == 'f':
                 Water(x, y, tile_width, tile_height, images[5], water_group, all_sprites)
                 Fish(x, y, tile_width, tile_height, images[3], enemy_group, all_sprites)
-            elif name_level[y][x] == 'd':
+            elif level[y][x] == 'd':
                 Spike(x, y, tile_width, tile_height, images[8], spikes_group, all_sprites)
-            elif name_level[y][x] == "r":
+            elif level[y][x] == "r":
                 Air(x, y, tile_width, tile_height, air_group, all_sprites)
                 Rune(x, y, tile_width, tile_height, images[-2], rune_group, all_sprites)
-            elif name_level[y][x] == "S":
+            elif level[y][x] == "S":
                 Air(x, y, tile_width, tile_height, air_group, all_sprites)
                 SpecialBlock(x, y, tile_width, tile_height, images[-1], let_group, special_block_group, all_sprites)
     return hero, x, y
@@ -134,7 +147,7 @@ def main():
     # загрузка картинок
     end_game_im, images, for_hud, numbers = get_images()
 
-    hero, level_x, level_y = create_level(PRIMITIVE_LEVEL, images)
+    hero, level_x, level_y = create_level(dir_levels[0], images)
     hud = Hud(*difficult[dif], hero, 0, 0, for_hud, numbers, hud_group, all_sprites)
     camera = Camera((level_x, level_y), WIDTH, HEIGHT)
 
