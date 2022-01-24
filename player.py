@@ -12,7 +12,8 @@ HERO_OXYGEN = 6
 
 
 class Hero(pygame.sprite.Sprite):
-    def __init__(self, pos_x, pos_y, tile_width, tile_height, image, coin_im, special_block_group, coin_group,
+    def __init__(self, pos_x, pos_y, tile_width, tile_height, image, coin_im, snail_group, special_block_group,
+                 coin_group,
                  coin_box_group,
                  all_sprites,
                  *groups):
@@ -20,6 +21,8 @@ class Hero(pygame.sprite.Sprite):
         self.image = image
         self.rect = self.image.get_rect().move(tile_width * pos_x,
                                                tile_height * pos_y)
+
+        self.snail_group = snail_group
 
         self.group = [coin_group, all_sprites]
         self.coin_im = coin_im
