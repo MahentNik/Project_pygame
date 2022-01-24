@@ -52,8 +52,11 @@ class Hud(pygame.sprite.Sprite):
 
         self.show_stats()
 
-    def update(self, water_group, enemy_group, coin_group, air_group, spikes_group,
+    def update(self, dead_block_group, water_group, enemy_group, coin_group, air_group, spikes_group,
                may_get_damaged, is_time_o2, is_time__o2, is_time__05):
+
+        if collide(self.hero, dead_block_group):
+            self.HP = 0
 
         self.visible_o2 = False
 

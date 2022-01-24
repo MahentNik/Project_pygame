@@ -45,6 +45,18 @@ class CoinBox(Tile):
         self.image = image
 
 
+class ForeGround(Tile):
+    def __init__(self, pos_x, pos_y, tile_width, tile_height, image, *groups):
+        super().__init__(pos_x, pos_y, tile_width, tile_height, *groups)
+        self.image = image
+
+
+class BackGround(Tile):
+    def __init__(self, pos_x, pos_y, tile_width, tile_height, image, *groups):
+        super().__init__(pos_x, pos_y, tile_width, tile_height, *groups)
+        self.image = image
+
+
 class Spike(Tile):
 
     def __init__(self, pos_x, pos_y, tile_width, tile_height, image, *groups):
