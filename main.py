@@ -164,6 +164,7 @@ def main():
 
     # загрузка меню
     dif, lvl = menu_cycle(clock, FPS, WINDOW_SIZE, screen)
+    lvl += ".txt"
 
     # загрузка картинок
     win_game_im, end_game_im, images, for_hud, numbers, new_images = get_images()
