@@ -21,7 +21,7 @@ class Hero(pygame.sprite.Sprite):
         self.cur_frame = 0
         self.images = image
         self.image = image[0]
-        self.mirrored_images = 0
+        self.mirrored_images = [pygame.transform.flip(frame, True, False) for frame in self.images]
         self.rect = self.image.get_rect().move(tile_width * pos_x,
                                                tile_height * pos_y)
         self.snail_group = snail_group
@@ -43,25 +43,25 @@ class Hero(pygame.sprite.Sprite):
         for tile in lets:
             if pygame.sprite.collide_rect(self, tile):
                 if vx > 0:
-                    if self.rune_item and other_collide(self.special_block, True):
+                    if self.rune_item and other_collide(self, self.special_block, True):
                         self.bom_anim()
                     self.rect.right = tile.rect.left
                 if vx < 0:
-                    if self.rune_item and other_collide(self.special_block, True):
+                    if self.rune_item and other_collide(self, self.special_block, True):
                         self.bom_anim()
                     self.rect.left = tile.rect.right
                 if vy > 0:
-                    if self.rune_item and other_collide(self.special_block, True):
+                    if self.rune_item and other_collide(self, self.special_block, True):
                         self.bom_anim()
                     self.rect.bottom = tile.rect.top
                     self.on_Ground = True
                     self.vy = 0
 
                 if vy < 0:
-                    if self.rune_item and other_collide(self.special_block, True):
+                    if self.rune_item and other_collide(self, self.special_block, True):
                         self.bom_anim()
-                    if other_collide(self.coin_box_group):
-                        sp = other_collide(self.coin_box_group, True)
+                    if other_collide(self, self.coin_box_group):
+                        sp = other_collide(self, self.coin_box_group, True)
                         for i in sp:
                             x, y = i.rect.x, i.rect.y
                             Coin(x, y, self.coin_im, self.groups_for_coin)
