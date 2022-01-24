@@ -130,21 +130,8 @@ class Hero(pygame.sprite.Sprite):
 
             self.rect.x += self.vx
             self.collide(self.vx, 0, let_group)
-
-        """if collide(self, let_group):
-            if self.vx < 0:
-                self.rect.x += -self.xvel
-            elif self.vx > 0:
-                self.rect.x += -self.xvel
-            if self.vy > 0:
-                self.rect.y += -self.yvel
-                self.onGround = True
-            elif self.vy < 0:
-                self.vy = 0"""
-    # класс персонажа(игрока)
-    # Показатели игрока (думаю они будут зависеть от сложности, но это уже совсем другая история) : 1) HP -- {3~5}
-    #                    2) Пузырьки воздуха (этот показатель виден только в воде) {5~7}
-    #                    (восполняетс по два пузырька в секунду)
-    #                    3) Счетчик монет (от 0 до ...)
-    #                    4) ...
-    # еще один вопрос - будет ли наш персонаж атаковать? (можно убрать эту возможность) опять же по времени
+    def is_win(self, win_group):
+        if self.other_collide(self, win_group):
+            return True
+        else:
+            return None

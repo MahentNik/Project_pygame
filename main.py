@@ -99,6 +99,7 @@ def create_level(name_level, images, new_images):
 
 
 def get_images():
+    win_game_im = load_image("win_lvl.png")
     end_game_im = load_image("end_screen.png")
     hero_im = load_image('p1_stand.png', -1)
     brick = load_image('dirt.png')
@@ -146,7 +147,7 @@ def get_images():
     numbers = load_image("hud_0.png", -1), load_image("hud_1.png", -1), load_image("hud_2.png", -1), load_image(
         "hud_3.png", -1), load_image("hud_4.png", -1), load_image("hud_5.png", -1), load_image("hud_6.png", -1), \
               load_image("hud_7.png", -1), load_image("hud_8.png", -1), load_image("hud_9.png", -1)
-    return end_game_im, images, for_hud, numbers, new_images
+    return win_game_im, end_game_im, images, for_hud, numbers, new_images
 
 
 def main():
@@ -162,11 +163,10 @@ def main():
     pygame.time.set_timer(REPEAT_MUSIC, 60000)
 
     # загрузка меню
-    dif = menu_cycle(clock, FPS, WINDOW_SIZE, screen)
-    lvl = "1_lvl.txt"
+    dif, lvl = menu_cycle(clock, FPS, WINDOW_SIZE, screen)
 
     # загрузка картинок
-    end_game_im, images, for_hud, numbers, new_images = get_images()
+    win_game_im, end_game_im, images, for_hud, numbers, new_images = get_images()
 
     hero, level_x, level_y = create_level(lvl, images, new_images)
     hud = Hud(*difficult[dif], hero, 0, 0, for_hud, numbers, hud_group, all_sprites)
@@ -240,6 +240,7 @@ def main():
             hud.update(dead_block_group, water_group, enemy_group, coin_group, air_group, spikes_group, may_get_damaged,
                        is_time_o2, is_time__o2, is_time__05)
             hero_status = hud.hero_status()
+            is_win = hero.is_win(win_group)
 
             if rune_event:
                 rune_group.update()
@@ -270,6 +271,14 @@ def main():
             pygame.mixer.music.pause()
             end_game_screen = EndScreen(end_game_im, screen, clock, FPS)
             end_game_screen.create_screen()
+            running = False
+            for i in all_sprites:
+                i.kill()
+            main()
+        elif is_win:
+            # play win_music
+            win_game_screen = EndScreen(win_game_im, screen, clock, FPS)
+            win_game_screen.create_screen()
             running = False
             for i in all_sprites:
                 i.kill()

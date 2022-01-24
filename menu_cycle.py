@@ -22,10 +22,13 @@ def menu_cycle(clock, fps, window_size, screen):
                 if event.user_type == pygame_gui.UI_CONFIRMATION_DIALOG_CONFIRMED:
                     terminate()
                 if event.user_type == pygame_gui.UI_DROP_DOWN_MENU_CHANGED:
-                    menu.game_difficult = event.text
+                    if event.ui_element == menu.start_btn:
+                        menu.game_difficult = event.text
+                    else:
+                        menu.game_lvl = event.text
                 if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
                     if event.ui_element == menu.start_btn:
-                        return menu.game_difficult
+                        return menu.game_difficult, menu.game_lvl + ".txt"
                     elif event.ui_element == menu.exit_btn:
                         create_confirm(manager, window_size)
             manager.process_events(event)
