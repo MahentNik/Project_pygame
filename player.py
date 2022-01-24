@@ -18,8 +18,10 @@ class Hero(pygame.sprite.Sprite):
                  all_sprites,
                  *groups):
         super().__init__(groups)
+        self.cur_frame = 0
         self.images = image
         self.image = image[0]
+        self.mirrored_images = 0
         self.rect = self.image.get_rect().move(tile_width * pos_x,
                                                tile_height * pos_y)
         self.snail_group = snail_group
