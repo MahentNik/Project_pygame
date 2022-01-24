@@ -18,7 +18,8 @@ class Hero(pygame.sprite.Sprite):
                  all_sprites,
                  *groups):
         super().__init__(groups)
-        self.image = image
+        self.images = image
+        self.image = image[0]
         self.rect = self.image.get_rect().move(tile_width * pos_x,
                                                tile_height * pos_y)
         self.snail_group = snail_group
@@ -40,25 +41,25 @@ class Hero(pygame.sprite.Sprite):
         for tile in lets:
             if pygame.sprite.collide_rect(self, tile):
                 if vx > 0:
-                    if self.rune_item and self.other_collide(self, self.special_block, True):
+                    if self.rune_item and other_collide(self.special_block, True):
                         self.bom_anim()
                     self.rect.right = tile.rect.left
                 if vx < 0:
-                    if self.rune_item and self.other_collide(self, self.special_block, True):
+                    if self.rune_item and other_collide(self.special_block, True):
                         self.bom_anim()
                     self.rect.left = tile.rect.right
                 if vy > 0:
-                    if self.rune_item and self.other_collide(self, self.special_block, True):
+                    if self.rune_item and other_collide(self.special_block, True):
                         self.bom_anim()
                     self.rect.bottom = tile.rect.top
                     self.on_Ground = True
                     self.vy = 0
 
                 if vy < 0:
-                    if self.rune_item and self.other_collide(self, self.special_block, True):
+                    if self.rune_item and other_collide(self.special_block, True):
                         self.bom_anim()
-                    if self.other_collide(self, self.coin_box_group):
-                        sp = self.other_collide(self, self.coin_box_group, True)
+                    if other_collide(self.coin_box_group):
+                        sp = other_collide(self.coin_box_group, True)
                         for i in sp:
                             x, y = i.rect.x, i.rect.y
                             Coin(x, y, self.coin_im, self.groups_for_coin)
@@ -71,7 +72,7 @@ class Hero(pygame.sprite.Sprite):
         # обновление пероснажа
 
     def update(self, left, right, up, wat_up, wat_down, let_group, water_group, ladder_group, enemy_group,
-               coin_group, air_group, coin_box_group, spikes_group, may_get_damage):
+               coin_group, air_group, coin_box_group, spikes_group, rune_group, may_get_damage):
         if not other_collide(self, water_group) and not other_collide(self, ladder_group):
             self.ground_collide(up, left, right, let_group)
         elif other_collide(self, water_group):
@@ -80,6 +81,8 @@ class Hero(pygame.sprite.Sprite):
             self.ladder_collide(wat_up, wat_down, left, right, let_group)
         if other_collide(self, enemy_group) or other_collide(self, spikes_group):
             self.enemy_collide(enemy_group, spikes_group, let_group)
+        if other_collide(self, rune_group, True):
+            self.rune_item = True
 
     def frame_changes(self, left, right, up):
         if left:
@@ -174,11 +177,11 @@ class Hero(pygame.sprite.Sprite):
         self.collide(self.vx, 0, let_group)
 
     def is_win(self, win_group):
-        if self.other_collide(self, win_group):
+        if other_collide(self, win_group):
             return True
         else:
             return None
 
 
-def other_collide(self, player, group, status=False):
+def other_collide(player, group, status=False):
     return pygame.sprite.spritecollide(player, group, status)

@@ -124,7 +124,7 @@ class Hud(pygame.sprite.Sprite):
         pos_x = 0
         change_pos = 50
         hp = self.HP
-        for i in range(HERO_HP):
+        for i in range(self.hero_hp):
             if hp >= 1:
                 hp -= 1
                 screen.blit(self.HP_im, (pos_x, 0))

@@ -8,7 +8,6 @@ from player import Hero
 from camera import Camera
 from hud import Hud
 from items import Rune
-from spike import Spike
 from tiles import *
 from special_block import SpecialBlock
 from pause_menu import PauseMenu
@@ -153,7 +152,7 @@ def get_images():
     numbers = load_image("hud_0.png", -1), load_image("hud_1.png", -1), load_image("hud_2.png", -1), load_image(
         "hud_3.png", -1), load_image("hud_4.png", -1), load_image("hud_5.png", -1), load_image("hud_6.png", -1), \
               load_image("hud_7.png", -1), load_image("hud_8.png", -1), load_image("hud_9.png", -1)
-    return win_game_im, end_game_im, images, for_hud, numbers
+    return win_game_im, end_game_im, images, for_hud, numbers, new_images
 
 
 def main():
@@ -246,7 +245,7 @@ def main():
 
             hero.update(is_left, is_right, up, wat_up, wat_down, let_group, water_group, ladder_group,
                         enemy_group,
-                        coin_group, air_group, coin_box_group, rune_group)
+                        coin_group, air_group, coin_box_group, spikes_group, rune_group, may_get_damaged)
             hud.update(dead_block_group, water_group, enemy_group, coin_group, air_group, spikes_group,
                        may_get_damaged,
                        is_time_o2, is_time__o2, is_time__05)
