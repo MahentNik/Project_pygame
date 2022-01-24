@@ -1,4 +1,5 @@
 import os
+import os
 import pygame
 from load_image import load_image
 from snail import Snail
@@ -16,7 +17,7 @@ from pause_cycle import pause_cycle
 from end_screen import EndScreen
 
 # основные переменные
-WINDOW_SIZE = WIDTH, HEIGHT = 1300, 800
+WINDOW_SIZE = WIDTH, HEIGHT = 1600, 800
 FPS = 60
 RELOAD_HIT = pygame.USEREVENT + 76  # перезарядка получения урона
 RELOAD_o2 = pygame.USEREVENT + 77  # перезарядка получения кислорода
@@ -24,6 +25,7 @@ RELOAD__o2 = pygame.USEREVENT + 78  # перезарядка отнимания 
 REPEAT_MUSIC = pygame.USEREVENT + 1
 RUNE_MOVES = pygame.USEREVENT + 99
 RELOAD__05 = pygame.USEREVENT + 111
+FRAME_CHANGE = pygame.USEREVENT + 2  # смена кадра
 
 difficult = {"Easy": (6, 6),
              "Medium": (4, 6),
@@ -101,8 +103,11 @@ def create_level(name_level, images, new_images):
 def get_images():
     win_game_im = load_image("win_lvl.png")
     end_game_im = load_image("end_screen.png")
+    jump_im = load_image('p1_jump.png', -1)
+    walk_im = load_image('p1_walk11.png', -1)
+    stand_im = load_image('p1_stand.png', -1)
     hero_im = load_image('p1_stand.png', -1)
-    brick = load_image('dirt.png')
+    brick = load_image('brickWall.png', -1)
     snail_image = load_image('snailWalk1.png', -1)
     fish_image = load_image('fishSwim1.png', -1)
     ladder_image = load_image('ladder_mid.png', -2)
@@ -110,6 +115,7 @@ def get_images():
     coin_box = load_image("boxCoin.png", -1)
     coin_im = load_image("coinGold1.png", -1)
     spike_im = load_image('spikes.png', -1)
+    hero_images = [stand_im, walk_im, jump_im]
     rune_im = load_image("rune.png", -1)
     special = load_image("fake_brick.png", -1)
     box = load_image("box.png", -1)
@@ -140,14 +146,14 @@ def get_images():
         "t": torch,
         ")": right
     }
-    images = [hero_im, brick, snail_image, fish_image, ladder_image, water_image, coin_box, coin_im, spike_im, rune_im,
+    images = [hero_images, brick, snail_image, fish_image, ladder_image, water_image, coin_box, coin_im, spike_im, rune_im,
               special]
     for_hud = [load_image("no_hp.png", -1), load_image("half_hp.png", -1), load_image("hp.png", -1),
                load_image("o2.png"), coin_im]
     numbers = load_image("hud_0.png", -1), load_image("hud_1.png", -1), load_image("hud_2.png", -1), load_image(
         "hud_3.png", -1), load_image("hud_4.png", -1), load_image("hud_5.png", -1), load_image("hud_6.png", -1), \
               load_image("hud_7.png", -1), load_image("hud_8.png", -1), load_image("hud_9.png", -1)
-    return win_game_im, end_game_im, images, for_hud, numbers, new_images
+    return win_game_im, end_game_im, images, for_hud, numbers
 
 
 def main():
@@ -182,8 +188,8 @@ def main():
 
     # timers
     pygame.time.set_timer(RUNE_MOVES, 140)
+    pygame.time.set_timer(FRAME_CHANGE, 90)
     while running:
-
         may_get_damaged = False  # перезарядка получения урона
         is_time_o2 = False  # перезарядка получения кислорода
         is_time__o2 = False  # перезарядка отнимания кислорода
@@ -229,6 +235,8 @@ def main():
                 is_time_o2 = True
             if event.type == RELOAD__o2:
                 is_time__o2 = True
+            if event.type == FRAME_CHANGE:
+                hero.frame_changes(is_left, is_right, up)
 
         if not is_paused:
             camera.update(hero)
@@ -236,9 +244,11 @@ def main():
             for sprite in all_sprites:
                 camera.apply(sprite)
 
-            hero.update(is_left, is_right, up, wat_up, wat_down, let_group, water_group, ladder_group, enemy_group,
+            hero.update(is_left, is_right, up, wat_up, wat_down, let_group, water_group, ladder_group,
+                        enemy_group,
                         coin_group, air_group, coin_box_group, rune_group)
-            hud.update(dead_block_group, water_group, enemy_group, coin_group, air_group, spikes_group, may_get_damaged,
+            hud.update(dead_block_group, water_group, enemy_group, coin_group, air_group, spikes_group,
+                       may_get_damaged,
                        is_time_o2, is_time__o2, is_time__05)
             hero_status = hud.hero_status()
             is_win = hero.is_win(win_group)
@@ -286,7 +296,6 @@ def main():
             main()
         pygame.display.flip()
         clock.tick(FPS)
-
 
 special_block_group = pygame.sprite.Group()
 rune_group = pygame.sprite.Group()

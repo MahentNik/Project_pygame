@@ -1,3 +1,4 @@
+# класс камеры
 class Camera:
     def __init__(self, field_size, width, height):
         self.dx = 0

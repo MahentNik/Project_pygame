@@ -120,18 +120,11 @@ class Hud(pygame.sprite.Sprite):
 
         self.show_stats()
 
-    def hero_status(self):
-        if self.HP <= 0:
-            self.hero.kill()
-            return True
-        else:
-            return None
-
     def show_hp(self, screen):
         pos_x = 0
         change_pos = 50
         hp = self.HP
-        for i in range(self.hero_hp):
+        for i in range(HERO_HP):
             if hp >= 1:
                 hp -= 1
                 screen.blit(self.HP_im, (pos_x, 0))
@@ -141,6 +134,13 @@ class Hud(pygame.sprite.Sprite):
                 hp -= 0.5
                 screen.blit(self.halfHP_im, (pos_x, 0))
             pos_x += change_pos
+
+    def hero_status(self):
+        if self.HP <= 0:
+            self.hero.kill()
+            return True
+        else:
+            return None
 
     def show_coins(self, screen):
         coins = str(self.coin_counter)
