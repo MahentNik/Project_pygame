@@ -1,5 +1,4 @@
 import os
-import os
 import pygame
 from load_image import load_image
 from snail import Snail
@@ -9,7 +8,6 @@ from camera import Camera
 from hud import Hud
 from items import Rune
 from tiles import *
-from special_block import SpecialBlock
 from pause_menu import PauseMenu
 from menu_cycle import menu_cycle
 from pause_cycle import pause_cycle
@@ -145,13 +143,14 @@ def get_images():
         "t": torch,
         ")": right
     }
-    images = [hero_images, brick, snail_image, fish_image, ladder_image, water_image, coin_box, coin_im, spike_im, rune_im,
+    images = [hero_images, brick, snail_image, fish_image, ladder_image, water_image, coin_box, coin_im, spike_im,
+              rune_im,
               special]
     for_hud = [load_image("no_hp.png", -1), load_image("half_hp.png", -1), load_image("hp.png", -1),
                load_image("o2.png"), coin_im]
     numbers = load_image("hud_0.png", -1), load_image("hud_1.png", -1), load_image("hud_2.png", -1), load_image(
         "hud_3.png", -1), load_image("hud_4.png", -1), load_image("hud_5.png", -1), load_image("hud_6.png", -1), \
-              load_image("hud_7.png", -1), load_image("hud_8.png", -1), load_image("hud_9.png", -1)
+        load_image("hud_7.png", -1), load_image("hud_8.png", -1), load_image("hud_9.png", -1)
     return win_game_im, end_game_im, images, for_hud, numbers, new_images
 
 
@@ -300,6 +299,7 @@ def main():
             main()
         pygame.display.flip()
         clock.tick(FPS)
+
 
 special_block_group = pygame.sprite.Group()
 rune_group = pygame.sprite.Group()

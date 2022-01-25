@@ -1,5 +1,4 @@
 import pygame
-from end_screen import EndScreen
 
 HUD_SIZE = (HUD_WIDTH, HUD_HEIGHT) = (300, 150)
 

@@ -1,5 +1,4 @@
 import pygame
-import math
 from items import Coin
 
 JUMP_POWER = 10
@@ -17,7 +16,7 @@ class Hero(pygame.sprite.Sprite):
                  coin_box_group,
                  all_sprites,
                  *groups):
-        super().__init__(groups)
+        super().__init__(*groups)
         self.cur_frame = 0
         self.images = image
         self.image = image[0]
@@ -64,7 +63,7 @@ class Hero(pygame.sprite.Sprite):
                         sp = other_collide(self, self.coin_box_group, True)
                         for i in sp:
                             x, y = i.rect.x, i.rect.y
-                            Coin(x, y, self.coin_im, self.groups_for_coin)
+                            Coin(x, y, self.coin_im, *self.groups_for_coin)
                     self.rect.top = tile.rect.bottom
                     self.vy = 0
 

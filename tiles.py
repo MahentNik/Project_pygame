@@ -73,3 +73,11 @@ class BackGround(Tile):
     def __init__(self, pos_x, pos_y, tile_width, tile_height, image, *groups):
         super().__init__(pos_x, pos_y, tile_width, tile_height, *groups)
         self.image = image
+
+
+# конец уровня
+class SpecialBlock(Tile):
+    def __init__(self, pos_x, pos_y, tile_width, tile_height, image, *groups):
+        super().__init__(pos_x, pos_y, tile_width, tile_height, *groups)
+        self.image = image
+
