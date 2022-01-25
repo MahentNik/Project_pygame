@@ -20,7 +20,10 @@ def menu_cycle(clock, fps, window_size, screen):
                 pygame.mixer.music.play()
             if event.type == pygame.USEREVENT:
                 if event.user_type == pygame_gui.UI_CONFIRMATION_DIALOG_CONFIRMED:
-                    terminate()
+                    if event.ui_element != menu.help_info:
+                        terminate()
+                    else:
+                        pass
                 if event.user_type == pygame_gui.UI_DROP_DOWN_MENU_CHANGED:
                     if event.ui_element == menu.difficult:
                         menu.game_difficult = event.text
@@ -31,6 +34,8 @@ def menu_cycle(clock, fps, window_size, screen):
                         return menu.game_difficult, menu.game_lvl
                     elif event.ui_element == menu.exit_btn:
                         create_confirm(manager, window_size)
+                    elif event.ui_element == menu.help_btn:
+                        menu.create_confirm(manager, window_size)
             manager.process_events(event)
         screen.fill((218, 187, 253))
         manager.update(time_delta)

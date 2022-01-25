@@ -16,7 +16,7 @@ from pause_cycle import pause_cycle
 from end_screen import EndScreen
 
 # основные переменные
-WINDOW_SIZE = WIDTH, HEIGHT = 1600, 800
+WINDOW_SIZE = WIDTH, HEIGHT = 1300, 800
 FPS = 60
 RELOAD_HIT = pygame.USEREVENT + 76  # перезарядка получения урона
 RELOAD_o2 = pygame.USEREVENT + 77  # перезарядка получения кислорода

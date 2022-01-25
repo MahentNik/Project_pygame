@@ -5,7 +5,7 @@ import pygame
 def create_confirm(manager, window_size):
     confirm_height = 200
     confirm_width = 300
-    pygame_gui.windows.UIConfirmationDialog(
+    exit_info = pygame_gui.windows.UIConfirmationDialog(
         rect=pygame.Rect(
             (window_size[0] // 2 - confirm_width // 2, window_size[1] // 2 - confirm_height // 2),
             (confirm_width, confirm_height)),
