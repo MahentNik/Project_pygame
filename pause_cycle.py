@@ -11,7 +11,8 @@ def pause_cycle(clock, fps, window_size, screen):
     pause_menu = PauseMenu(window_size)
     manager, pause_screen = pause_menu.give_manager()
     pause_menu.create(window_size)
-    while True:
+    running = True
+    while running:
         time_delta = clock.tick(fps) / 1000.0
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -29,6 +30,8 @@ def pause_cycle(clock, fps, window_size, screen):
                 if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
                     if event.ui_element == pause_menu.continue_btn:
                         return False
+                    elif event.ui_element == pause_menu.go_to_main_menu:
+                        return True
                     elif event.ui_element == pause_menu.exit_btn:
                         create_confirm(manager, window_size)
             manager.process_events(event)

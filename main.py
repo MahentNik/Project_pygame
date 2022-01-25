@@ -258,8 +258,13 @@ def main():
             enemy_group.update()
             coin_group.update(ground_group)
         else:
-            pause_cycle(clock, FPS, WINDOW_SIZE, screen)
+            go_to_menu = pause_cycle(clock, FPS, WINDOW_SIZE, screen)
             is_paused = False
+            if go_to_menu:
+                running = False
+                for i in all_sprites:
+                    i.kill()
+                main()
         screen.fill((218, 187, 253))
         ladder_group.draw(screen)
         water_group.draw(screen)

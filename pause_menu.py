@@ -11,19 +11,23 @@ class PauseMenu:
         return self.manager, self.pause_surface
 
     def create(self, size):
-        start_btn_width = 160
-        start_btn_height = 80
+        btn_width = 160
+        btn_height = 80
         self.continue_btn = pygame_gui.elements.UIButton(
-            relative_rect=pygame.Rect((size[0] // 2 - start_btn_width // 2, size[1] // 3),
-                                      (start_btn_width, start_btn_height)),
+            relative_rect=pygame.Rect((size[0] // 2 - btn_width // 2, size[1] // 3),
+                                      (btn_width, btn_height)),
             text="Continue",
             manager=self.manager
         )
-        exit_btn_width = 160
-        exit_btn_height = 80
+        self.go_to_main_menu = pygame_gui.elements.UIButton(
+            relative_rect=pygame.Rect((size[0] // 2 - btn_width // 2, size[1] - size[1] // 2),
+                                      (btn_width, btn_height)),
+            text="Go to Main Menu",
+            manager=self.manager
+        )
         self.exit_btn = pygame_gui.elements.UIButton(
-            relative_rect=pygame.Rect((size[0] // 2 - start_btn_width // 2, size[1] - size[1] // 2),
-                                      (exit_btn_width, exit_btn_height)),
+            relative_rect=pygame.Rect((size[0] // 2 - btn_width // 2, size[1] - size[1] // 3),
+                                      (btn_width, btn_height)),
             text="Exit the Game",
             manager=self.manager
         )
